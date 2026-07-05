@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <!-- CSSはここで読み込む -->
+    <link rel="stylesheet" href="style.css">
+    <title>タロット占い</title>
+</head>
+<body>
+    <div id="app">
+        <h1>タロット占い</h1>
+        
+        <!-- ボタンをdivで囲んでクラスを付ける -->
+        <div class="button-container">
+            <button onclick="draw(1)">1枚引く</button>
+            <button onclick="draw(2)">2枚引く</button>
+            <button onclick="draw(3)">3枚引く</button>
+        </div>
+        
+        <div id="result"></div> <!-- 閉じタグを追加 -->
+    </div>
+
+    <!-- JSはbodyの最後に書く -->
+    <script src="app.js"></script>
+</body>
+</html>
