@@ -1,15 +1,17 @@
 {
-  "name": "タロット占いアプリ",
-  "short_name": "タロット",
+  "name": "多Lot",
+  "short_name": "多Lot",
+  "description": "タロットカード占い",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#333333",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
+      "src": "icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
