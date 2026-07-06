@@ -17,12 +17,35 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* ボタンの親要素（ボタンを囲んでいるdivなど）をセンタリング */
+/* スマホ向けのボタン基本設定 */
+button {
+    /* 文字を大きく見やすく */
+    font-size: 1.2rem;
+    
+    /* ボタンの内側上下左右に余白を設けて、タップ領域を大きくする */
+    padding: 15px 30px;
+    
+    /* ボタン同士の間隔（上下にも少し持たせて、改行されても重ならないようにする） */
+    margin: 10px 5px;
+    
+    /* (お好みで) 角を丸くする */
+    border-radius: 8px;
+    
+    /* (お好みで) 枠線と背景色を整える */
+    border: 1px solid #333;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    
+    /* タップした時の反応を良くする（長押しメニューなどを抑制） */
+    touch-action: manipulation;
+}
+
+/* ボタンを囲むコンテナの設定（中央寄せ用） */
 .button-container {
     display: flex;
-    justify-content: center; /* 横方向の中央寄せ */
-    gap: 10px;               /* ボタン同士の隙間 */
-    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap; /* ボタンが多い場合、画面幅に合わせて折り返すようにする */
+    padding: 10px;
 }
 
 /* コンテナ設定 */
@@ -40,8 +63,8 @@ h1 {
 .card-item {
     width: 200px;
     min-height: 320px; /* heightをmin-heightにすると文字量が増えても崩れません */
-    background-color: #ffffff;
-    border: 1px solid #ccc; /* 枠線を明示 */
+    border: 2px solid #333;
+    background-color: #f9f9f9;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     padding: 20px;
@@ -55,8 +78,8 @@ h1 {
 /* カード内のタイトル（h3）の設定 */
 .card-item h3 {
     color: #2c3e50; /* 濃い青色で文字を表示 */
-    font-size: 1.2rem;
-    margin: 0 0 15px 0;
+    margin: 5px 0;
+    font-size: 1.3rem;
 }
 
 /* カード内の解説文（p）の設定 */
@@ -72,4 +95,20 @@ h1 {
     color: #555555; /* 文字色をグレーに */
     margin-top: 10px;
     line-height: 1.5;   /* 行間を広げて読みやすく */
+}
+
+.card-category {
+    font-size: 0.75rem;      /* 小さめの文字サイズ */
+    color: #999;             /* 薄いグレー */
+    letter-spacing: 0.1em;   /* 少し字間を空けて上品に */
+    margin-bottom: 5px;      /* タイトルとの隙間 */
+    text-transform: uppercase;
+}
+
+.card-meta {
+    font-size: 0.7rem;
+    color: #666;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
 }

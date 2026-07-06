@@ -1,95 +1,91 @@
 const allCards = [
-    // 大アルカナ
-    { name: "愚者", advice: "新しい冒険の始まりです。常識にとらわれず、直感を信じて一歩踏み出しましょう。" },
-    { name: "魔術師", advice: "準備は整いました。あなたの創造力を発揮し、具体的な行動に移す時です。" },
-    { name: "女教皇", advice: "今は静かに内省し、直感を研ぎ澄ます時です。冷静な判断が求められています。" },
-    { name: "女帝", advice: "豊かさと愛情に満ちています。周囲の人への優しさが良い結果を生むでしょう。" },
-    { name: "皇帝", advice: "リーダーシップを発揮しましょう。目標に向かって規律正しく進むことが大切です。" },
-    { name: "教皇", advice: "伝統や精神的な学びを大切にしてください。信頼できる誰かのアドバイスが鍵となります。" },
-    { name: "恋人たち", advice: "大切な決断の時です。自分の心に正直になり、調和を大切に選択してください。" },
-    { name: "戦車", advice: "勢いよく進むべき時です。強い意志を持って障害を乗り越えていきましょう。" },
-    { name: "力", advice: "力ずくではなく、忍耐と信頼で問題を解決できる時です。自分を信じてください。" },
-    { name: "隠者", advice: "一度立ち止まって、自分自身と深く向き合いましょう。答えは内にあります。" },
-{ name: "正義", advice: "公平な判断が求められています。感情に流されず、客観的な視点でバランスを取ることが大切です。" },
-{ name: "吊るされた男", advice: "今は動かないことが最善の策です。視点を変えることで新しい気づきが得られるでしょう。" },
-{ name: "死神", advice: "一つの物事が終わり、新しいステージへ向かう時です。変化を恐れずに受け入れましょう。" },
-{ name: "節制", advice: "調和と調整を心がけてください。無理をせず、中庸を守ることで物事がスムーズに進みます。" },
-{ name: "悪魔", advice: "執着や誘惑にとらわれていませんか？自分を縛り付けているものから解放される勇気を持ちましょう。" },
-{ name: "塔", advice: "予期せぬ変化が起こるかもしれません。しかし、それは不要なものを崩し、再構築するためのチャンスです。" },
-{ name: "星", advice: "希望の光が見えています。理想を高く持ち、夢に向かって前向きに進んでいきましょう。" },
-{ name: "月", advice: "不安や迷いがあるかもしれませんが、それは内面の深さの表れです。直感を頼りに一歩ずつ進みましょう。" },
-{ name: "太陽", advice: "成功と喜びの時です。エネルギーに満ち溢れていますので、自信を持って目標に向かってください。" },
-{ name: "審判", advice: "これまでの努力が報われ、再生や復活のチャンスが訪れます。過去の経験を糧にしましょう。" },
-{ name: "世界", advice: "完成と達成のカードです。努力が報われ、すべてが調和する完璧な状態を迎えるでしょう。" },
+    { number: 0,  name: "愚者", category: "大アルカナ", keywords: ["自由", "冒険", "始まり"], advice: "新しい旅の始まり。恐れずに一歩踏み出しましょう。" },
+    { number: 1,  name: "魔術師", category: "大アルカナ", keywords: ["創造", "意志", "技術"], advice: "準備は整いました。意志を持って行動を開始する時です。" },
+    { number: 2,  name: "女教皇", category: "大アルカナ", keywords: ["直感", "神秘", "内省"], advice: "直感を信じて。静かに内面と向き合いましょう。" },
+    { number: 3,  name: "女帝", category: "大アルカナ", keywords: ["豊かさ", "母性", "創造"], advice: "豊かさの象徴。愛情を注ぎ、創造性を大切にしてください。" },
+    { number: 4,  name: "皇帝", category: "大アルカナ", keywords: ["安定", "統率", "責任"], advice: "安定と統率。責任を持ち、着実に計画を進めましょう。" },
+    { number: 5,  name: "法王", category: "大アルカナ", keywords: ["伝統", "教育", "導き"], advice: "伝統や精神的な導き。周囲の助言に耳を傾けてください。" },
+    { number: 6,  name: "恋人たち", category: "大アルカナ", keywords: ["調和", "選択", "絆"], advice: "調和と選択。心の声に従い、直感を信じて選ぶ時です。" },
+    { number: 7,  name: "戦車", category: "大アルカナ", keywords: ["勝利", "前進", "意志"], advice: "勝利と前進。強い意志を持って障害を乗り越えましょう。" },
+    { number: 8,  name: "力", category: "大アルカナ", keywords: ["忍耐", "勇気", "信頼"], advice: "忍耐と勇気。力づくではなく、愛と信頼で解決できます。" },
+    { number: 9,  name: "隠者", category: "大アルカナ", keywords: ["内省", "探求", "孤独"], advice: "内省の時間。一人の時間を持ち、深く真実を探求しましょう。" },
+    { number: 10, name: "運命の輪", category: "大アルカナ", keywords: ["変化", "好機", "サイクル"], advice: "変化の訪れ。流れに身を任せ、チャンスを掴みましょう。" },
+    { number: 11, name: "正義", category: "大アルカナ", keywords: ["公平", "判断", "バランス"], advice: "公平とバランス。冷静に判断し、誠実に行動しましょう。" },
+    { number: 12, name: "吊るされた男", category: "大アルカナ", keywords: ["試練", "視点", "手放し"], advice: "今は動く時ではありません。じっくり待ち、視点を変えましょう。" },
+    { number: 13, name: "死神", category: "大アルカナ", keywords: ["終焉", "再生", "変容"], advice: "終わりと再生。執着を手放し、新しいステージへ進みましょう。" },
+    { number: 14, name: "節制", category: "大アルカナ", keywords: ["調和", "調整", "献身"], advice: "調整と調和。心と身体のバランスを整えましょう。" },
+    { number: 15, name: "悪魔", category: "大アルカナ", keywords: ["誘惑", "依存", "束縛"], advice: "誘惑からの解放。依存や固定観念を断ち切る時です。" },
+    { number: 16, name: "塔", category: "大アルカナ", keywords: ["崩壊", "解放", "劇的変化"], advice: "劇的な変化。崩壊は再出発のため。恐れず受け入れましょう。" },
+    { number: 17, name: "星", category: "大アルカナ", keywords: ["希望", "憧れ", "インスピレーション"], advice: "希望とインスピレーション。未来を信じて夢を描きましょう。" },
+    { number: 18, name: "月", category: "大アルカナ", keywords: ["不安", "幻影", "直感"], advice: "不安と迷い。直感を研ぎ澄まし、見えない真実を見極めて。" },
+    { number: 19, name: "太陽", category: "大アルカナ", keywords: ["活力", "成功", "純粋"], advice: "成功と活力。明るいエネルギーが味方します。自信を持って。" },
+    { number: 20, name: "審判", category: "大アルカナ", keywords: ["復活", "決断", "覚醒"], advice: "復活と決断。過去の結果を受け入れ、新たな道へ進みましょう。" },
+    { number: 21, name: "世界", category: "大アルカナ", keywords: ["完成", "成就", "調和"], advice: "完成と成就。努力が実を結び、素晴らしい調和が訪れます。" },
 
-// 小アルカナ
-    { suit: "ワンド (火)", theme: "情熱、エネルギー、創造性" },
-    { suit: "カップ (水)", theme: "感情、人間関係、愛情" },
-    { suit: "ソード (風)", theme: "思考、理性、決断" },
-    { suit: "ペンタクル (地)", theme: "現実、物質、仕事、経済" },
-    // --- ワンド (情熱・行動) ---
-{ name: "ワンドのエース", type: "minor", suit: "wand", advice: "新しい情熱やプロジェクトの始まりです。直感を信じて一歩踏み出しましょう。" },
-{ name: "ワンドの2", type: "minor", suit: "wand", advice: "計画の段階です。視野を広げ、将来の展望をしっかりと見据えてください。" },
-{ name: "ワンドの3", type: "minor", suit: "wand", advice: "努力の成果が見え始めています。成功に向けて次のステップへ進む準備を。" },
-{ name: "ワンドの4", type: "minor", suit: "wand", advice: "調和と祝福のカード。安定した基盤や友人との交流が幸運を呼びます。" },
-{ name: "ワンドの5", type: "minor", suit: "wand", advice: "競争や意見の食い違いが起こるかもしれません。建設的な議論を心がけて。" },
-{ name: "ワンドの6", type: "minor", suit: "wand", advice: "勝利と称賛の時。自信を持って堂々と振る舞うことが大切です。" },
-{ name: "ワンドの7", type: "minor", suit: "wand", advice: "自分を信じて戦う時です。困難な状況でも毅然とした態度を保ちましょう。" },
-{ name: "ワンドの8", type: "minor", suit: "wand", advice: "スピーディーな展開が期待できます。流れに乗って迅速に行動しましょう。" },
-{ name: "ワンドの9", type: "minor", suit: "wand", advice: "あと一歩の頑張りが必要です。これまでの経験を活かし、慎重に進めてください。" },
-{ name: "ワンドの10", type: "minor", suit: "wand", advice: "責任を背負いすぎていませんか？荷を下ろし、休養を取る勇気が必要です。" },
-{ name: "ワンドのページ", type: "minor", suit: "wand", advice: "好奇心を持って新しい学びを始めましょう。" },
-{ name: "ワンドのナイト", type: "minor", suit: "wand", advice: "情熱的に突き進むエネルギー。スピード重視で。" },
-{ name: "ワンドのクイーン", type: "minor", suit: "wand", advice: "自信と魅力に溢れています。周囲を明るく照らして。" },
-{ name: "ワンドのキング", type: "minor", suit: "wand", advice: "強いリーダーシップと責任感。目的を達成する力。" },
+        // --- ワンド (情熱・行動) ---14
+{ number: "Ace", name: "ワンドのエース", category: "小アルカナ", keywords: ["情熱", "芽生え", "創造"], advice: "情熱の芽生え。新しいチャンスや意欲が湧いてきます。" },
+{ number: 2, name: "ワンドの2", category: "小アルカナ", keywords: ["計画", "展望", "選択"], advice: "計画の段階。未来を見据えて戦略を練る時です。" },
+{ number: 3, name: "ワンドの3", category: "小アルカナ", keywords: ["発展", "準備", "拡大"], advice: "発展と拡大。準備を終え、いよいよ動き出す時です。" },
+{ number: 4, name: "ワンドの4", category: "小アルカナ", keywords: ["祝賀", "調和", "安らぎ"], advice: "祝賀と調和。安らぎを感じ、努力の結果を楽しみましょう。" },
+{ number: 5, name: "ワンドの5", category: "小アルカナ", keywords: ["競い合い", "葛藤", "成長"], advice: "競い合い。意見の衝突があるかもしれませんが、成長の糧になります。" },
+{ number: 6, name: "ワンドの6", category: "小アルカナ", keywords: ["勝利", "称賛", "自信"], advice: "勝利と称賛。自信を持って進みましょう。" },
+{ number: 7, name: "ワンドの7", category: "小アルカナ", keywords: ["防御", "勇気", "信念"], advice: "防御と粘り強さ。困難に直面しても、自分の信念を貫いて。" },
+{ number: 8, name: "ワンドの8", category: "小アルカナ", keywords: ["進展", "スピード", "急変"], advice: "急速な進展。物事がスピーディーに動く時です。" },
+{ number: 9, name: "ワンドの9", category: "小アルカナ", keywords: ["忍耐", "防御", "持続"], advice: "忍耐と防御。ゴールは近いです。最後まで気を抜かずに。" },
+{ number: 10, name: "ワンドの10", category: "小アルカナ", keywords: ["重圧", "責任", "負担"], advice: "重圧。抱え込みすぎです。荷を下ろして休むことも大切です。" },
+{ number: "Page", name: "ワンドのペイジ", category: "小アルカナ", keywords: ["好奇心", "メッセージ", "熱意"], advice: "新しいメッセージや好奇心。純粋な情熱を大切に。" },
+{ number: "Knight", name: "ワンドのナイト", category: "小アルカナ", keywords: ["冒険", "行動", "衝動"], advice: "冒険と行動。衝動的でも、まずはやってみることが吉。" },
+{ number: "Queen", name: "ワンドのクイーン", category: "小アルカナ", keywords: ["自信", "自立", "魅力"], advice: "自信と自立。明るく情熱的で、周囲を巻き込む力があります。" },
+{ number: "King", name: "ワンドのキング", category: "小アルカナ", keywords: ["リーダーシップ", "決断", "情熱"], advice: "リーダーシップと情熱。決断力を持って全体を導きましょう。" },
 
-// --- カップ (愛情・人間関係) ---
-{ name: "カップのエース", type: "minor", suit: "cup", advice: "愛情の始まりや、心の充足感が得られるチャンスです。" },
-{ name: "カップの2", type: "minor", suit: "cup", advice: "相互理解とパートナーシップ。信頼できる人との絆が深まります。" },
-{ name: "カップの3", type: "minor", suit: "cup", advice: "友情やグループでの楽しい交流。喜びを分かち合いましょう。" },
-{ name: "カップの4", type: "minor", suit: "cup", advice: "退屈や停滞を感じているなら、新しい視点やチャンスを見逃さないで。" },
-{ name: "カップの5", type: "minor", suit: "cup", advice: "喪失感に囚われがちですが、残されたものに目を向ける時です。" },
-{ name: "カップの6", type: "minor", suit: "cup", advice: "過去の思い出や純粋な心が鍵。懐かしい人と縁があるかも。" },
-{ name: "カップの7", type: "minor", suit: "cup", advice: "多くの選択肢に迷いそう。現実的で大切な目標を一つに絞りましょう。" },
-{ name: "カップの8", type: "minor", suit: "cup", advice: "物足りなさを感じ、より高い精神性を求めて旅立つ時です。" },
-{ name: "カップの9", type: "minor", suit: "cup", advice: "願いが叶い、満足感を得られます。自分へのご褒美も大切に。" },
-{ name: "カップの10", type: "minor", suit: "cup", advice: "幸福と調和。家族や大切な人との幸せな関係を示します。" },
-{ name: "カップのページ", type: "minor", suit: "cup", advice: "感受性が豊か。新しい夢や直感を大切にしましょう。" },
-{ name: "カップのナイト", type: "minor", suit: "cup", advice: "ロマンチックなアプローチや創造的な愛。" },
-{ name: "カップのクイーン", type: "minor", suit: "cup", advice: "共感力と深い愛情。他者の気持ちを優しく受け入れて。" },
-{ name: "カップのキング", type: "minor", suit: "cup", advice: "寛容さと落ち着き。感情をコントロールする大人の知恵。" },
+// --- カップ (愛情・人間関係) ---14
+{ number: "Ace", name: "カップのエース", category: "小アルカナ", keywords: ["愛情", "豊かさ", "受容"], advice: "新しい愛や感情の始まり。心の満たされる喜びを感じて。" },
+{ number: 2, name: "カップの2", category: "小アルカナ", keywords: ["絆", "調和", "協力"], advice: "パートナーシップと調和。互いに支え合い、理解し合える時。" },
+{ number: 3, name: "カップの3", category: "小アルカナ", keywords: ["友情", "喜び", "共感"], advice: "友情と分かち合い。仲間と共に楽しい時間を過ごしましょう。" },
+{ number: 4, name: "カップの4", category: "小アルカナ", keywords: ["倦怠", "無関心", "内省"], advice: "退屈や無関心。目の前のチャンスに気づいて。少し見方を変えてみて。" },
+{ number: 5, name: "カップの5", category: "小アルカナ", keywords: ["喪失", "悲しみ", "後悔"], advice: "喪失感。過ぎたことを悔やむより、残されたものに目を向けましょう。" },
+{ number: 6, name: "カップの6", category: "小アルカナ", keywords: ["回想", "純粋", "癒やし"], advice: "懐かしさや純粋さ。過去の経験や思い出がヒントをくれます。" },
+{ number: 7, name: "カップの7", category: "小アルカナ", keywords: ["選択", "空想", "迷い"], advice: "選択肢が多い迷い。空想だけでなく、現実的な目標を絞りましょう。" },
+{ number: 8, name: "カップの8", category: "小アルカナ", keywords: ["探求", "旅立ち", "解放"], advice: "探求と旅立ち。今の環境を離れ、より深い意味を求めて進む時。" },
+{ number: 9, name: "カップの9", category: "小アルカナ", keywords: ["充足", "幸福", "達成"], advice: "幸福と充足。願いが叶う予兆。自分自身を誇りに思って。" },
+{ number: 10, name: "カップの10", category: "小アルカナ", keywords: ["至福", "家族", "調和"], advice: "幸福な家庭や絆。周囲の人々との深い結びつきを感じましょう。" },
+{ number: "Page", name: "カップのペイジ", category: "小アルカナ", keywords: ["直感", "想像", "感受性"], advice: "直感と想像力。心温まるメッセージや、夢見る力が芽生えます。" },
+{ number: "Knight", name: "カップのナイト", category: "小アルカナ", keywords: ["ロマン", "招待", "優しさ"], advice: "ロマンと招待。感情に従い、優雅にアプローチする時。" },
+{ number: "Queen", name: "カップのクイーン", category: "小アルカナ", keywords: ["共感", "癒やし", "慈愛"], advice: "共感と癒やし。優しい心で他者に寄り添い、内面を大切に。" },
+{ number: "King", name: "カップのキング", category: "小アルカナ", keywords: ["寛容", "安定", "成熟"], advice: "大人の感情コントロール。感情を落ち着かせ、寛容さを持って接して。" },
 
-// --- ソード (思考・決断) ---
-{ name: "ソードのエース", type: "minor", suit: "sword", advice: "冷静な判断で新しい考えが生まれます。真実を見極めて。" },
-{ name: "ソードの2", type: "minor", suit: "sword", advice: "決断を先延ばしにしているかも。心の中の均衡を保つよう努めて。" },
-{ name: "ソードの3", type: "minor", suit: "sword", advice: "深い悲しみや誤解を乗り越える時。心の整理をしましょう。" },
-{ name: "ソードの4", type: "minor", suit: "sword", advice: "今は休息が必要。心身を休め、エネルギーを蓄えましょう。" },
-{ name: "ソードの5", type: "minor", suit: "sword", advice: "勝ち負けにこだわらないで。損をしても得るものがあるはずです。" },
-{ name: "ソードの6", type: "minor", suit: "sword", advice: "困難な状況から静かな場所へ移動する時。前向きな未来へ。" },
-{ name: "ソードの7", type: "minor", suit: "sword", advice: "知恵を使って工夫する時ですが、誠実さも忘れずに。" },
-{ name: "ソードの8", type: "minor", suit: "sword", advice: "自分自身で限界を作っていませんか？視界が開ける日は近いです。" },
-{ name: "ソードの9", type: "minor", suit: "sword", advice: "過度な悩みは休息で解消を。自分を追い詰めないでください。" },
-{ name: "ソードの10", type: "minor", suit: "sword", advice: "苦痛の終わり。すべてを手放して再出発する時です。" },
-{ name: "ソードのページ", type: "minor", suit: "sword", advice: "鋭い観察眼を持って、情報を正しく集めましょう。" },
-{ name: "ソードのナイト", type: "minor", suit: "sword", advice: "論理的な思考力で素早く現状を突破する力。" },
-{ name: "ソードのクイーン", type: "minor", suit: "sword", advice: "知性と公正さ。感情に流されず判断しましょう。" },
-{ name: "ソードのキング", type: "minor", suit: "sword", advice: "冷徹なまでの冷静さと、高い論理的思考。" },
+// --- ソード (思考・決断) ---14
+{ number: "Ace", name: "ソードのエース", category: "小アルカナ", keywords: ["決断", "論理", "突破"], advice: "鋭い知性と決断力。真実を見抜き、新たな視点で切り開く時。" },
+{ number: 2, name: "ソードの2", category: "小アルカナ", keywords: ["葛藤", "均衡", "迷い"], advice: "板挟みや葛藤。あえて目を閉じて、心を落ち着かせ整理する時間。" },
+{ number: 3, name: "ソードの3", category: "小アルカナ", keywords: ["痛み", "悲しみ", "受容"], advice: "心の痛み。悲しみを受け入れることで、回復への道が開かれます。" },
+{ number: 4, name: "ソードの4", category: "小アルカナ", keywords: ["休息", "回復", "静寂"], advice: "休息と回復。今は戦いを止め、心身を静かに休める時です。" },
+{ number: 5, name: "ソードの5", category: "小アルカナ", keywords: ["争い", "敗北", "後悔"], advice: "争いと後味の悪さ。勝ち負けに執着せず、距離を置く勇気も必要。" },
+{ number: 6, name: "ソードの6", category: "小アルカナ", keywords: ["移行", "癒やし", "出発"], advice: "困難からの脱出。より穏やかな場所へ向かうための旅立ち。" },
+{ number: 7, name: "ソードの7", category: "小アルカナ", keywords: ["戦略", "機転", "隠密"], advice: "機転と戦略。正面突破が難しい時は、知恵を使って切り抜けましょう。" },
+{ number: 8, name: "ソードの8", category: "小アルカナ", keywords: ["束縛", "制限", "孤立"], advice: "自縄自縛。自分で制限を作っていませんか？視点を変えれば自由になれます。" },
+{ number: 9, name: "ソードの9", category: "小アルカナ", keywords: ["不安", "苦悩", "ストレス"], advice: "悪夢や不安。考えすぎによるストレスです。まずは眠って心を軽くして。" },
+{ number: 10, name: "ソードの10", category: "小アルカナ", keywords: ["終焉", "浄化", "再起"], advice: "どん底。すべてが終わり、新しい夜明けを迎える準備ができました。" },
+{ number: "Page", name: "ソードのペイジ", category: "小アルカナ", keywords: ["観察", "警戒", "知性"], advice: "観察と警戒。好奇心を持って情報を集め、冷静に状況を見極めて。" },
+{ number: "Knight", name: "ソードのナイト", category: "小アルカナ", keywords: ["推進", "思考", "直進"], advice: "スピードと知性。目的のために一直線。周囲の状況確認も忘れずに。" },
+{ number: "Queen", name: "ソードのクイーン", category: "小アルカナ", keywords: ["公正", "自立", "鋭敏"], advice: "冷静な判断と自立。感情に流されず、公平で賢明な決断を。" },
+{ number: "King", name: "ソードのキング", category: "小アルカナ", keywords: ["権威", "規律", "真実"], advice: "公正と権威。高い視点を持ち、論理的かつ的確に物事を判断して。" },
 
-// --- ペンタクル (現実・仕事) ---
-{ name: "ペンタクルのエース", type: "minor", suit: "pentacle", advice: "物質的な利益や新しいチャンスの種。コツコツと育てて。" },
-{ name: "ペンタクルの2", type: "minor", suit: "pentacle", advice: "物事のバランスを保ちましょう。柔軟な対応が鍵です。" },
-{ name: "ペンタクルの3", type: "minor", suit: "pentacle", advice: "チームワークと協力。専門性を活かして目標を達成する時。" },
-{ name: "ペンタクルの4", type: "minor", suit: "pentacle", advice: "守りに入りすぎていませんか？執着を捨てると豊かさが循環します。" },
-{ name: "ペンタクルの5", type: "minor", suit: "pentacle", advice: "困窮感があるなら周囲を頼って。助けを求めるのは恥ではありません。" },
-{ name: "ペンタクルの6", type: "minor", suit: "pentacle", advice: "寛大さと分かち合い。徳を積むことで幸運が巡ります。" },
-{ name: "ペンタクルの7", type: "minor", suit: "pentacle", advice: "これまでの取り組みを振り返り、今後を慎重に見極める時。" },
-{ name: "ペンタクルの8", type: "minor", suit: "pentacle", advice: "着実な努力が実を結びます。集中して技術を磨き続けましょう。" },
-{ name: "ペンタクルの9", type: "minor", suit: "pentacle", advice: "独立心と豊かさ。努力が報われ、心豊かな時間を過ごせます。" },
-{ name: "ペンタクルの10", type: "minor", suit: "pentacle", advice: "経済的な安定と幸福。家族や組織との盤石な繋がりを享受して。" },
-{ name: "ペンタクルのページ", type: "minor", suit: "pentacle", advice: "着実な学びや、新しい実務の習得に向いています。" },
-{ name: "ペンタクルのナイト", type: "minor", suit: "pentacle", advice: "慎重で着実な歩み。時間はかかっても確実に結果を出す。" },
-{ name: "ペンタクルのクイーン", type: "minor", suit: "pentacle", advice: "母性的な包容力と実務能力。豊かさを育てる力。" },
-{ name: "ペンタクルのキング", type: "minor", suit: "pentacle", advice: "成功と安定した基盤。現実を動かす力を持っています。" }
+// --- ペンタクル (現実・仕事) ---14
+{ number: "Ace", name: "ペンタクルのエース", category: "小アルカナ", keywords: ["豊かさ", "チャンス", "物質"], advice: "豊かさの始まり。新しい仕事や資産運用のチャンスです。" },
+{ number: 2, name: "ペンタクルの2", category: "小アルカナ", keywords: ["柔軟性", "バランス", "変化"], advice: "バランスと柔軟性。複数のことを並行しながら上手くこなしましょう。" },
+{ number: 3, name: "ペンタクルの3", category: "小アルカナ", keywords: ["協力", "技術", "評価"], advice: "チームワークと技術。協力して取り組むことで、確かな評価が得られます。" },
+{ number: 4, name: "ペンタクルの4", category: "小アルカナ", keywords: ["安定", "所有", "執着"], advice: "安定と執着。堅実ですが、守りすぎて機会を逃さないよう注意して。" },
+{ number: 5, name: "ペンタクルの5", category: "小アルカナ", keywords: ["欠乏", "孤立", "苦難"], advice: "不安や困窮。助けを求めることを恐れないで。外には温かい場所があります。" },
+{ number: 6, name: "ペンタクルの6", category: "小アルカナ", keywords: ["分かち合い", "寛大", "循環"], advice: "分かち合い。助け合いが巡り巡って、豊かさをもたらします。" },
+{ number: 7, name: "ペンタクルの7", category: "小アルカナ", keywords: ["収穫", "熟考", "見直し"], advice: "収穫の準備。努力の結果を待ち、今までの過程を振り返る時。" },
+{ number: 8, name: "ペンタクルの8", category: "小アルカナ", keywords: ["習熟", "努力", "専門"], advice: "努力と習熟。コツコツと専門性を高めることが、将来の成功に繋がります。" },
+{ number: 9, name: "ペンタクルの9", category: "小アルカナ", keywords: ["自立", "贅沢", "成果"], advice: "自立と贅沢。自分自身の努力で築いた豊かさを楽しみましょう。" },
+{ number: 10, name: "ペンタクルの10", category: "小アルカナ", keywords: ["繁栄", "基盤", "永続"], advice: "永続的な繁栄。家系や伝統、長期的な安定が手に入るでしょう。" },
+{ number: "Page", name: "ペンタクルのペイジ", category: "小アルカナ", keywords: ["学習", "計画", "実行"], advice: "学習と計画。新しいスキルや現実的な目標に向かって学ぼうとする心。" },
+{ number: "Knight", name: "ペンタクルのナイト", category: "小アルカナ", keywords: ["勤勉", "誠実", "着実"], advice: "勤勉と誠実。着実で真面目な姿勢が、確実な成果を導きます。" },
+{ number: "Queen", name: "ペンタクルのクイーン", category: "小アルカナ", keywords: ["安心", "包容力", "現実的"], advice: "安心と包容力。現実的な豊かさを慈しみ、周囲を支える力。" },
+{ number: "King", name: "ペンタクルのキング", category: "小アルカナ", keywords: ["成功", "管理", "安定"], advice: "経済的な安定と成功。富を管理し、安定した基盤を作り上げる人。" }
+
 ];
 
 // 2. 占う関数（HTMLの onclick で呼ばれる関数）
@@ -105,15 +101,152 @@ function draw(num) {
 
     resultDiv.innerHTML = ''; 
 
-    selected.forEach((card) => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card-item';
-        
-        // ここに <h3>（名前）と <p>（解説）が両方あるか確認してください
-        cardElement.innerHTML = `
-            <h3>${card.name}</h3>
-            <p class="card-advice">${card.advice}</p>
-        `;
-        resultDiv.appendChild(cardElement);
+    // 表示用のコード
+selected.forEach((card) => {
+    const cardElement = document.createElement('div');
+    cardElement.className = 'card-item';
+    
+    cardElement.innerHTML = `
+        <div class="card-meta">${card.category} / No.${card.number}</div>
+        <h3>${card.name}</h3>
+        <p class="card-advice">${card.advice}</p>
+    `;
+    resultDiv.appendChild(cardElement);
+});
+}
+
+function analyzeSpread(selectedCards) {
+    let counts = {
+        "大アルカナ": 0,
+        "ワンド": 0,
+        "カップ": 0,
+        "ソード": 0,
+        "ペンタクル": 0
+    };
+
+    // カウント処理
+    selectedCards.forEach(card => {
+        if (card.category === "大アルカナ") {
+            counts["大アルカナ"]++;
+        } else {
+            // 名前にスートが含まれているか判定
+            if (card.name.includes("ワンド")) counts["ワンド"]++;
+            if (card.name.includes("カップ")) counts["カップ"]++;
+            if (card.name.includes("ソード")) counts["ソード"]++;
+            if (card.name.includes("ペンタクル")) counts["ペンタクル"]++;
+        }
     });
+
+    return counts;
+}
+
+const interpretationRules = [
+    {
+        // ルール: 大アルカナが多い時
+        check: (counts) => counts["大アルカナ"] >= 2,
+        message: "運命の大きな流れを感じる時です。目の前のことだけでなく、長期的な視野で人生の転換点にいることを意識してください。"
+    },
+    {
+        // ルール: ワンド（情熱）が過半数の時
+        check: (counts) => counts["ワンド"] >= 2,
+        message: "今は行動力が鍵です。情熱が空回りしやすい時でもありますが、まずは動くことで道が開けます。"
+    },
+    {
+        // ルール: ソード（思考）が過半数の時
+        check: (counts) => counts["ソード"] >= 2,
+        message: "論理的な思考が冴え渡っています。しかし、考えすぎて頭でっかちにならないよう注意が必要です。"
+    },
+    // ...このようにスートの組み合わせルールを増やしていく
+];
+
+
+// 2. カウントと解釈を行うメイン関数
+function generateReading(selectedCards) {
+    // カウント初期化
+    let counts = { "大アルカナ": 0, "ワンド": 0, "カップ": 0, "ソード": 0, "ペンタクル": 0 };
+
+    // カウント処理
+    selectedCards.forEach(card => {
+        if (card.category === "大アルカナ") {
+            counts["大アルカナ"]++;
+        } else {
+            if (card.name.includes("ワンド")) counts["ワンド"]++;
+            if (card.name.includes("カップ")) counts["カップ"]++;
+            if (card.name.includes("ソード")) counts["ソード"]++;
+            if (card.name.includes("ペンタクル")) counts["ペンタクル"]++;
+        }
+    });
+
+    // ルールに基づいてメッセージを生成
+    let adviceMessages = rules
+        .filter(rule => rule.check(counts))
+        .map(rule => rule.message);
+
+    // 結果が空なら標準メッセージを返す
+    return adviceMessages.length > 0 
+        ? adviceMessages.join(" ") 
+        : "今は運気が安定しており、心身ともにバランスが取れています。自然体で過ごすのが一番です。";
+}
+
+/**
+ * 3枚のカードから総合的なメッセージを生成する関数
+ * @param {Array} selectedCards - 引いたカードの配列
+ */
+function generateComprehensiveReading(selectedCards) {
+    // 1. カウントの初期化
+    let counts = { "大アルカナ": 0, "ワンド": 0, "カップ": 0, "ソード": 0, "ペンタクル": 0 };
+
+    // 2. カウント処理
+    selectedCards.forEach(card => {
+        if (card.category === "大アルカナ") {
+            counts["大アルカナ"]++;
+        } else {
+            if (card.name.includes("ワンド")) counts["ワンド"]++;
+            if (card.name.includes("カップ")) counts["カップ"]++;
+            if (card.name.includes("ソード")) counts["ソード"]++;
+            if (card.name.includes("ペンタクル")) counts["ペンタクル"]++;
+        }
+    });
+}
+
+    // 3. ルールセット（すべてのパターンを統合）
+const rules = [
+    // --- 1枚引き専用ルール ---
+    { 
+        check: () => selectedCards.length === 1 && counts["大アルカナ"] === 1, 
+        message: "今は大きな運命の波が、あなた一人にフォーカスしています。このカードの持つ意味を、人生の大きなヒントとして受け取ってください。" 
+    },
+
+    // --- 2枚引き専用ルール ---
+    { 
+        check: () => selectedCards.length === 2 && (counts["ワンド"] === 2 || counts["カップ"] === 2 || counts["ソード"] === 2 || counts["ペンタクル"] === 2), 
+        message: "同じエネルギーのカードが2枚揃いました。その分野が今のあなたの運勢を強力に後押ししています。迷わず突き進んでください。" 
+    },
+
+    // --- 組み合わせルール ---
+    { check: () => counts["ワンド"] >= 1 && counts["ペンタクル"] >= 1, message: "情熱と現実的な努力が合致しています。ビジネスやキャリアにおいて、目に見える大きな成果が得られるでしょう。" },
+    { check: () => counts["ワンド"] >= 1 && counts["カップ"] >= 1, message: "クリエイティブな活動が充実します。自分の情熱を注ぐことが、身近な人との絆を深めることにも繋がります。" },
+    { check: () => counts["ワンド"] >= 1 && counts["ソード"] >= 1, message: "戦略的実行の時。綿密な計画を立て、それを即座に実行に移すことで困難を突破できる時です。" },
+    { check: () => counts["カップ"] >= 1 && counts["ソード"] >= 1, message: "冷静さを保ちつつ相手に寄り添う、賢い対人関係が築ける時です。" },
+    { check: () => counts["カップ"] >= 1 && counts["ペンタクル"] >= 1, message: "心穏やかな時間が、将来への安心感を生む安定した時期です。" },
+    { check: () => counts["ソード"] >= 1 && counts["ペンタクル"] >= 1, message: "論理的な計画が経済的な安定を生みます。無駄を省き、賢く管理できる時です。" },
+    
+    // --- 通常の重視ルール ---
+    { check: () => counts["大アルカナ"] >= 2, message: "運命の大きな転換点です。目先の細かなことより、長期的な視野で人生の方向性を意識してください。" },
+    { check: () => counts["ワンド"] >= 2, message: "情熱が高まっています。今は深く考えるより、まずは一歩動くことが結果に結びつきます。" },
+    { check: () => counts["カップ"] >= 2, message: "感情が豊かになっています。人間関係の調和や、自分の心の内面と向き合うことが鍵となります。" },
+    { check: () => counts["ソード"] >= 2, message: "論理的な思考が冴え渡っています。情報を整理し、戦略を練るのに最適な時期です。" },
+    { check: () => counts["ペンタクル"] >= 2, message: "着実な成果が期待できます。仕事の基盤作りなど、形になることに取り組んでみてください。" }
+];
+
+// 鑑定ボタンを押した時の処理（例）
+function onDrawCards() {
+    // 1. カードを引く処理（あなたの既存のコード）
+    let selectedCards = drawThreeCards(); 
+    
+    // 2. 鑑定文を生成
+    let message = generateComprehensiveReading(selectedCards);
+    
+    // 3. HTMLの表示エリアに書き込む
+    document.getElementById("reading-result").innerHTML = message;
 }
