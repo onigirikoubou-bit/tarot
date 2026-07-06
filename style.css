@@ -51,28 +51,30 @@ button {
 /* コンテナ設定 */
 #result {
     display: flex;
-    flex-wrap: wrap;        /* 重要：入りきらない場合は折り返す */
-    justify-content: center; /* 中央寄せ */
-    gap: 20px;              /* カード同士の隙間 */
-    padding: 20px;
-    width: 100%;            /* 画面幅いっぱいを使う */
-    box-sizing: border-box;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 20px; /* 必要最低限の隙間 */
+    margin-top: 30px;
+}
+
+/* 親要素に余裕を持たせる */
+#card-display-area {
+    padding-top: 20px; /* ここで一番上の隙間を作ります */
+    padding-bottom: 20px;
 }
 
 /* カード全体のスタイル */
 .card-item {
     width: 200px;
-    min-height: 320px; /* heightをmin-heightにすると文字量が増えても崩れません */
+    min-height: 300px;
     border: 2px solid #333;
-    background-color: #f9f9f9;
     border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    padding: 20px;
+    padding: 15px;
+    background-color: #fff;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    flex-direction: column; /* 縦並びを維持 */
+    margin: 10px;
 }
 
 /* カード内のタイトル（h3）の設定 */
@@ -82,19 +84,14 @@ button {
     font-size: 1.3rem;
 }
 
-/* カード内の解説文（p）の設定 */
+/* 説明文エリア：明示的に表示させる */
 .card-advice {
-    color: #34495e;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0;
-}
-/* 解説文をカード内で綺麗に見せる設定 */
-.card-advice {
-    font-size: 0.9rem;  /* 少し文字を小さくして読みやすく */
-    color: #555555; /* 文字色をグレーに */
+    display: block !important; /* 強制表示 */
+    text-align: left !important;
+    font-size: 14px;
+    color: #444;
     margin-top: 10px;
-    line-height: 1.5;   /* 行間を広げて読みやすく */
+    flex-grow: 1; /* 枠内でスペースを確保 */
 }
 
 .card-category {
@@ -111,4 +108,75 @@ button {
     border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
     padding-bottom: 5px;
+}
+
+/* カード全体は回転させない */
+.card-item {
+    width: 200px;
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 15px;
+    margin: 10px;
+    background-color: #fff;
+    display: inline-block;
+    vertical-align: top;
+}
+
+/* 逆位置の時、カード内の「名前コンテナ」だけを180度回す */
+.is-reversed .name-container {
+    transform: rotate(180deg);
+}
+
+/* その他の要素はそのまま */
+.card-meta, .card-advice {
+    text-align: center;
+}
+
+.name-container {
+    text-align: center;
+    margin: 10px 0; /* 上下の余白を確保 */
+    flex-grow: 1; /* 名前エリアを広げてバランスを取る */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* スマホ向けの特別な設定（画面幅が600px以下の場合） */
+@media screen and (max-width: 600px) {
+    .button-container {
+        padding: 20px 40px !important; /* ボタンの内部余白を広げて大きくする */
+        font-size: 18px !important;    /* 文字も大きくして押しやすくする */
+        width: 90%;                    /* 横幅を画面幅に合わせる */
+        max-width: 300px;              /* ただし大きすぎないように制限 */
+        margin: 10px auto;             /* 上下に余白を作って独立させる */
+        display: block;                /* 縦並びにし、押しやすくする */
+    }
+}
+
+/* カードの基本設定（回転アニメーションを追加） */
+.card-item {
+    transition: transform 0.6s ease-in-out; /* 0.6秒かけて滑らかに回る */
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+/* 逆カードの場合のスタイル */
+.card-item.is-reversed {
+    transform: rotate(180deg); /* 180度回転 */
+}
+
+/* カードを引いた瞬間のアニメーション */
+.card-item.appear {
+    animation: flipIn 0.8s ease-out forwards;
+}
+
+@keyframes flipIn {
+    from {
+        transform: scale(0.8) rotateY(-90deg); /* 少し小さく、横向きから開始 */
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) rotateY(0deg);     /* 通常サイズへ */
+        opacity: 1;
+    }
 }

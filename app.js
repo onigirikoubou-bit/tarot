@@ -88,31 +88,93 @@ const allCards = [
 
 ];
 
+// 逆位置のニュアンス（バリエーション10選）
+const reverseRules = [
+    "ただし、今はその力が少し空回りしています。一度立ち止まって見直しましょう。",
+    "今はエネルギーが内向的になっています。焦らずに準備を整える時期です。",
+    "本来の良さが少し過剰に出ているようです。バランスを意識してください。",
+    "少し停滞気味です。無理に動かず、今は現状維持が吉かもしれません。",
+    "外部からの影響を受けやすく、少し混乱しやすい時です。自分の軸を大切に。",
+    "今は少し時期尚早かもしれません。結果を急がず、プロセスの見直しを。",
+    "本来の目的から少し外れている可能性があります。もう一度目標を確認してみてください。",
+    "過信や慢心が影を落としているようです。謙虚な姿勢が解決の鍵になります。",
+    "今はまだ表面化していない問題があるようです。慎重なリサーチを心がけて。",
+    "少しエネルギーが停滞しています。環境を変えるか、気分転換を取り入れると良いでしょう。",
+    "今は無理に結果を求めず、充電期間として自分を労ってください。",
+    "過去のパターンに囚われているようです。新しい視点を取り入れてみましょう。",
+    "周囲への配慮が少し不足しているかもしれません。協調性を意識すると好転します。",
+    "今は決断を下すタイミングではありません。もう少し情報を集めるのが賢明です。",
+    "見落としがあるかもしれません。細部まで丁寧にチェックし直してみてください。",
+    "感情的になりやすい時です。一呼吸置いてから行動するとトラブルを避けられます。",
+    "今は遠回りに見える道が、実は一番の近道かもしれません。",
+    "自分自身を過小評価しているようです。もっと自信を持って取り組んで大丈夫です。",
+    "予期せぬ変化が起きやすい時です。柔軟な心で対応できるように備えましょう。",
+    "焦る気持ちが空回りを生んでいます。深呼吸してリラックスしましょう。"
+];
+
+// 3. アドバイスを取得する関数
+function getAdvice(card) {
+    if (!card.isReversed) {
+        return card.advice;
+    }
+    
+    // 逆位置の場合、ランダムに補足文を選んで追加する
+    const randomRule = reverseRules[Math.floor(Math.random() * reverseRules.length)];
+    
+    // 「逆カード」の部分を <span style="color: red;"> で囲みます
+    const label = '<span style="color: red;">逆カード</span>';
+    return `${card.advice}（${label}：${randomRule}）`;
+}
+
 // 2. 占う関数（HTMLの onclick で呼ばれる関数）
 function draw(num) {
     const shuffled = [...allCards].sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, num);
+    const selected = shuffled.slice(0, num).map(card => {
+        // 逆位置を50%の確率で判定
+        const isReversed = Math.random() < 0.5;
+        return { ...card, isReversed };
+    });
+
     const resultDiv = document.getElementById('result');
-    
-    if (!resultDiv) {
-        console.error("ID: result がHTMLで見つかりません");
-        return;
-    }
-
     resultDiv.innerHTML = ''; 
-
-    // 表示用のコード
-selected.forEach((card) => {
+    
+    selected.forEach((card) => {
     const cardElement = document.createElement('div');
     cardElement.className = 'card-item';
     
+    // ① ここで nameRotation 変数を生成する
+    const nameRotation = card.isReversed ? 'style="transform: rotate(180deg);"' : '';
+
+    // ② アニメーション用のクラス付与など
+    setTimeout(() => {
+        cardElement.classList.add('appear');
+    }, 10); 
+
+    if (card.isReversed) {
+        cardElement.classList.add('is-reversed');
+    }
+
+    // ③ ここで nameRotation を使う
     cardElement.innerHTML = `
         <div class="card-meta">${card.category} / No.${card.number}</div>
-        <h3>${card.name}</h3>
-        <p class="card-advice">${card.advice}</p>
+        <div class="name-container" ${nameRotation}>
+            <h3>${card.name}${card.isReversed ? " (逆カード)" : ""}</h3>
+        </div>
+        <p class="card-advice" style="text-align: left;">${getAdvice(card)}</p>
     `;
+    
     resultDiv.appendChild(cardElement);
 });
+
+// 鑑定結果を表示するエリアを取得します（HTMLに id="reading-result" が必要です）
+    const readingDiv = document.getElementById('reading-result');
+    if (readingDiv) {
+        const resultMessage = generateComprehensiveReading(selected);
+        readingDiv.innerText = resultMessage;
+        console.log("表示された結果:", resultMessage); // F12で確認用
+    } else {
+        alert("エラー：#reading-result が見つかりません！");
+    }
 }
 
 function analyzeSpread(selectedCards) {
@@ -193,10 +255,8 @@ function generateReading(selectedCards) {
  * @param {Array} selectedCards - 引いたカードの配列
  */
 function generateComprehensiveReading(selectedCards) {
-    // 1. カウントの初期化
     let counts = { "大アルカナ": 0, "ワンド": 0, "カップ": 0, "ソード": 0, "ペンタクル": 0 };
 
-    // 2. カウント処理
     selectedCards.forEach(card => {
         if (card.category === "大アルカナ") {
             counts["大アルカナ"]++;
@@ -207,36 +267,49 @@ function generateComprehensiveReading(selectedCards) {
             if (card.name.includes("ペンタクル")) counts["ペンタクル"]++;
         }
     });
+
+    // ★ここが重要：ルールを上から順にチェックして、当てはまるメッセージを配列に入れる
+    let messages = [];
+    rules.forEach(rule => {
+        // rule.check() に引数(counts, selectedCards)を渡して判定
+        if (rule.check(counts, selectedCards)) {
+            messages.push(rule.message);
+        }
+    });
+
+    // ★もしメッセージがあれば結合して返す。なければデフォルトを返す
+    return messages.length > 0 ? messages.join(" ") : "今は運気が安定しており、心身ともにバランスが取れています。自然体で過ごすのが一番です。";
 }
 
     // 3. ルールセット（すべてのパターンを統合）
 const rules = [
     // --- 1枚引き専用ルール ---
     { 
-        check: () => selectedCards.length === 1 && counts["大アルカナ"] === 1, 
+        // ★修正：() を (counts, selectedCards) に変えるだけ！
+        check: (counts, selectedCards) => selectedCards.length === 1 && counts["大アルカナ"] === 1, 
         message: "今は大きな運命の波が、あなた一人にフォーカスしています。このカードの持つ意味を、人生の大きなヒントとして受け取ってください。" 
     },
 
     // --- 2枚引き専用ルール ---
     { 
-        check: () => selectedCards.length === 2 && (counts["ワンド"] === 2 || counts["カップ"] === 2 || counts["ソード"] === 2 || counts["ペンタクル"] === 2), 
+        check: (counts, selectedCards) => selectedCards.length === 2 && (counts["ワンド"] === 2 || counts["カップ"] === 2 || counts["ソード"] === 2 || counts["ペンタクル"] === 2), 
         message: "同じエネルギーのカードが2枚揃いました。その分野が今のあなたの運勢を強力に後押ししています。迷わず突き進んでください。" 
     },
 
-    // --- 組み合わせルール ---
-    { check: () => counts["ワンド"] >= 1 && counts["ペンタクル"] >= 1, message: "情熱と現実的な努力が合致しています。ビジネスやキャリアにおいて、目に見える大きな成果が得られるでしょう。" },
-    { check: () => counts["ワンド"] >= 1 && counts["カップ"] >= 1, message: "クリエイティブな活動が充実します。自分の情熱を注ぐことが、身近な人との絆を深めることにも繋がります。" },
-    { check: () => counts["ワンド"] >= 1 && counts["ソード"] >= 1, message: "戦略的実行の時。綿密な計画を立て、それを即座に実行に移すことで困難を突破できる時です。" },
-    { check: () => counts["カップ"] >= 1 && counts["ソード"] >= 1, message: "冷静さを保ちつつ相手に寄り添う、賢い対人関係が築ける時です。" },
-    { check: () => counts["カップ"] >= 1 && counts["ペンタクル"] >= 1, message: "心穏やかな時間が、将来への安心感を生む安定した時期です。" },
-    { check: () => counts["ソード"] >= 1 && counts["ペンタクル"] >= 1, message: "論理的な計画が経済的な安定を生みます。無駄を省き、賢く管理できる時です。" },
+    // --- 組み合わせルール（すべて同様に書き換えます） ---
+    { check: (counts, selectedCards) => counts["ワンド"] >= 1 && counts["ペンタクル"] >= 1, message: "情熱と現実的な努力が合致しています。ビジネスやキャリアにおいて、目に見える大きな成果が得られるでしょう。" },
+    { check: (counts, selectedCards) => counts["ワンド"] >= 1 && counts["カップ"] >= 1, message: "クリエイティブな活動が充実します。自分の情熱を注ぐことが、身近な人との絆を深めることにも繋がります。" },
+    { check: (counts, selectedCards) => counts["ワンド"] >= 1 && counts["ソード"] >= 1, message: "戦略的実行の時。綿密な計画を立て、それを即座に実行に移すことで困難を突破できる時です。" },
+    { check: (counts, selectedCards) => counts["カップ"] >= 1 && counts["ソード"] >= 1, message: "冷静さを保ちつつ相手に寄り添う、賢い対人関係が築ける時です。" },
+    { check: (counts, selectedCards) => counts["カップ"] >= 1 && counts["ペンタクル"] >= 1, message: "心穏やかな時間が、将来への安心感を生む安定した時期です。" },
+    { check: (counts, selectedCards) => counts["ソード"] >= 1 && counts["ペンタクル"] >= 1, message: "論理的な計画が経済的な安定を生みます。無駄を省き、賢く管理できる時です。" },
     
-    // --- 通常の重視ルール ---
-    { check: () => counts["大アルカナ"] >= 2, message: "運命の大きな転換点です。目先の細かなことより、長期的な視野で人生の方向性を意識してください。" },
-    { check: () => counts["ワンド"] >= 2, message: "情熱が高まっています。今は深く考えるより、まずは一歩動くことが結果に結びつきます。" },
-    { check: () => counts["カップ"] >= 2, message: "感情が豊かになっています。人間関係の調和や、自分の心の内面と向き合うことが鍵となります。" },
-    { check: () => counts["ソード"] >= 2, message: "論理的な思考が冴え渡っています。情報を整理し、戦略を練るのに最適な時期です。" },
-    { check: () => counts["ペンタクル"] >= 2, message: "着実な成果が期待できます。仕事の基盤作りなど、形になることに取り組んでみてください。" }
+    // --- 通常の重視ルール（すべて同様に書き換えます） ---
+    { check: (counts, selectedCards) => counts["大アルカナ"] >= 2, message: "運命の大きな転換点です。目先の細かなことより、長期的な視野で人生の方向性を意識してください。" },
+    { check: (counts, selectedCards) => counts["ワンド"] >= 2, message: "情熱が高まっています。今は深く考えるより、まずは一歩動くことが結果に結びつきます。" },
+    { check: (counts, selectedCards) => counts["カップ"] >= 2, message: "感情が豊かになっています。人間関係の調和や、自分の心の内面と向き合うことが鍵となります。" },
+    { check: (counts, selectedCards) => counts["ソード"] >= 2, message: "論理的な思考が冴え渡っています。情報を整理し、戦略を練るのに最適な時期です。" },
+    { check: (counts, selectedCards) => counts["ペンタクル"] >= 2, message: "着実な成果が期待できます。仕事の基盤作りなど、形になることに取り組んでみてください。" }
 ];
 
 // 鑑定ボタンを押した時の処理（例）
