@@ -112,18 +112,52 @@ const reverseRules = [
     "焦る気持ちが空回りを生んでいます。深呼吸してリラックスしましょう。"
 ];
 
+const positiveReverseMessages = [
+    "逆位置のため、今は本来の困難が緩和され、前向きな兆しが見えています。",
+    "苦しい状況が終わりを告げようとしています。出口はすぐそこです。",
+    "重荷が少しずつ軽くなっています。肩の力を抜いて、深呼吸してみましょう。",
+    "壁だと思っていたものが、実は扉だったと気づく瞬間が訪れます。",
+    "最悪の時期は過ぎました。これからは運気が好転へと向かっていきます。",
+    "停滞していた空気が動き出しました。希望を持って一歩踏み出せる時です。",
+    "自分を縛り付けていた鎖が緩んでいます。自由に動ける時が近づいています。",
+    "今は試練の中にありますが、それがあなたをより強く輝かせています。",
+    "悲しみの裏側にあった喜びに、ようやく気づくことができるでしょう。",
+    "霧が晴れるように、進むべき道がはっきりと見え始めています。",
+    "あなたの内なる光が強まっています。もう恐れる必要はありません。",
+    "厳しい状況から学びを得て、あなたは一回り大きく成長しました。",
+    "物事が正しい方向へ修正されています。静かに結果を待ちましょう。",
+    "これまで見えなかった解決策が、ひらめきとなって降りてくるでしょう。",
+    "あなたの誠実さが報われ、状況が穏やかに好転し始めます。",
+    "閉ざされていた運気の風穴が開きました。新鮮なチャンスが巡ってきます。",
+    "自分を許すことで、物事の歯車が再び良いリズムで回り出します。",
+    "今は耐え時ですが、その先には素晴らしい景色が待っています。",
+    "偶然の助けや新しい出会いが、あなたの不安を取り除いてくれます。",
+    "心に余裕が戻ってきました。状況をコントロールする力が戻っています。"
+];
+
+    // ネガティブ判定用リスト
+const negativeList = {
+    upright: ["吊るされた男", "死神", "悪魔", "塔", "月", "ソード3", "ソード5", "ソード7", "ソード9", "ソード10", "カップ5", "カップ8", "ワンド5", "ワンド10", "ペンタクル5"],
+    reversed: ["魔術師", "皇帝", "戦車", "節制", "審判", "世界", "恋人", "力", "隠者", "運命の輪", "ペンタクル7", "ペンタクル10", "カップ3", "カップ10", "ワンド7", "カップ2", "カップ6", "ペンタクル4"]
+};
+
 // 3. アドバイスを取得する関数
 function getAdvice(card) {
-    if (!card.isReversed) {
-        return card.advice;
+    if (!card.isReversed) return card.advice; // 正位置はそのまま
+
+    // ネガティブカードの逆位置なら青、それ以外は赤のラベルを準備
+    const color = negativeList.upright.includes(card.name) ? 'blue' : 'red';
+    const label = `<span style="color: ${color};">逆カード：</span>`;
+
+    // 1. ネガティブカードが逆位置（前向きメッセージ）
+    if (negativeList.upright.includes(card.name)) {
+        const randomPositive = positiveReverseMessages[Math.floor(Math.random() * positiveReverseMessages.length)];
+        return `${card.advice} (${label}${randomPositive})`;
     }
-    
-    // 逆位置の場合、ランダムに補足文を選んで追加する
+
+    // 2. 通常の逆位置
     const randomRule = reverseRules[Math.floor(Math.random() * reverseRules.length)];
-    
-    // 「逆カード」の部分を <span style="color: red;"> で囲みます
-    const label = '<span style="color: red;">逆カード</span>';
-    return `${card.advice}（${label}：${randomRule}）`;
+    return `${card.advice} (${label}${randomRule})`;
 }
 
 // 2. 占う関数（HTMLの onclick で呼ばれる関数）
@@ -138,27 +172,26 @@ function draw(num) {
     const resultDiv = document.getElementById('result');
     resultDiv.innerHTML = ''; 
     
-    selected.forEach((card) => {
+    // draw関数内の修正版
+selected.forEach((card) => {
     const cardElement = document.createElement('div');
     cardElement.className = 'card-item';
-    
-    // ① ここで nameRotation 変数を生成する
-    const nameRotation = card.isReversed ? 'style="transform: rotate(180deg);"' : '';
 
-    // ② アニメーション用のクラス付与など
-    setTimeout(() => {
-        cardElement.classList.add('appear');
-    }, 10); 
-
-    if (card.isReversed) {
-        cardElement.classList.add('is-reversed');
+    // 1. ネガティブ判定（前の手順で実装したもの）
+    const isNegativeCard = negativeList.upright.includes(card.name);
+    let shouldBePink = isNegativeCard ? !card.isReversed : card.isReversed;
+    if (shouldBePink) {
+        cardElement.classList.add('negative');
     }
 
-    // ③ ここで nameRotation を使う
+    // ★ここで定義！：nameRotation を生成します
+    const nameRotation = card.isReversed ? 'style="transform: rotate(180deg);"' : '';
+    
+    // 2. HTML生成（ここでnameRotationを使う）
     cardElement.innerHTML = `
         <div class="card-meta">${card.category} / No.${card.number}</div>
         <div class="name-container" ${nameRotation}>
-            <h3>${card.name}${card.isReversed ? " (逆カード)" : ""}</h3>
+            <h3>${card.name}${card.isReversed ? " (逆)" : ""}</h3>
         </div>
         <p class="card-advice" style="text-align: left;">${getAdvice(card)}</p>
     `;
@@ -175,6 +208,7 @@ function draw(num) {
     } else {
         alert("エラー：#reading-result が見つかりません！");
     }
+
 }
 
 function analyzeSpread(selectedCards) {

@@ -120,6 +120,7 @@ button {
     background-color: #fff;
     display: inline-block;
     vertical-align: top;
+    align-items: center;
 }
 
 /* 逆位置の時、カード内の「名前コンテナ」だけを180度回す */
@@ -179,4 +180,11 @@ button {
         transform: scale(1) rotateY(0deg);     /* 通常サイズへ */
         opacity: 1;
     }
+}
+
+/* CSSファイルの末尾にコピペ */
+.card-item.negative {
+    background-color: #ffcccc !important;
+    border: 2px solid #ff9999 !important;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
 }
