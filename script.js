@@ -203,7 +203,7 @@ async function requestAIEvaluation() {
     try {
         // 3. サーバへのリクエスト（ここはご自身の既存コードに合わせて修正してください）
         // おそらく既存の generateReading() で使っている fetch 先と同じはずです
-        const response = await fetch('/api/evaluate', { // ここを既存の正しいエンドポイントに合わせる必要があります
+        const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', { // ここを既存の正しいエンドポイントに合わせる必要があります
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ cards: drawnCards })
