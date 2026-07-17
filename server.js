@@ -5,7 +5,10 @@ const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
-app.use(cors()); // フロントからの接続許可
+app.use(cors({
+    origin: 'https://github.com/onigirikoubou-bit/tarot', // ここを実際のURLに書き換え
+    methods: ['POST']
+}));
 app.use(express.json());
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -40,4 +43,5 @@ ${cardInfoText}
     }
 });
 
-app.listen(3000, () => console.log('Server running on port 3000'));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
