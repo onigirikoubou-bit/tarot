@@ -10,22 +10,39 @@
 <body>
     <div id="app">
         <h1>タロット占い</h1>
-        
-        <!-- ボタンをdivで囲んでクラスを付ける -->
-        <div class="button-container">
-            <button onclick="draw(1)">1枚引く</button>
-            <button onclick="draw(2)">2枚引く</button>
-            <button onclick="draw(3)">3枚引く</button>
-        </div>
-        <div id="card-display-area" style="display: block; width: 100%;">
-        <div id="result"></div> <!-- 閉じタグを追加 -->
-    </div>
 
-    <div id="reading-result" style="display: block; max-width: 600px; margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
-    ここに鑑定結果が表示されます
+        <!-- 占い設定エリア -->
+<div id="settings">
+    <label>占い師タイプ: 
+        <select id="persona">
+            <option value="慈愛に満ちた">慈愛に満ちた</option>
+            <option value="背中を押してくれる">背中を押してくれる</option>
+            <option value="客観的で鋭い">客観的で鋭い</option>
+        </select>
+    </label>
+    
+    <label>カテゴリ: 
+        <select id="category">
+            <option value="メッセージ">メッセージ</option>
+            <option value="仕事">仕事</option>
+            <option value="恋愛">恋愛</option>
+            <option value="人間関係">人間関係</option>
+            <option value="子育て">子育て</option>
+        </select>
+    </label>
 </div>
+<br>
+<!-- ボタンエリア（3枚引きなどの枚数で実行） -->
+<button onclick="handleDraw()">1枚めくる</button>
+<button onclick="requestAIEvaluation()" style="background-color: #27ae60; color: white;">この並びで占ってもらう</button>
+
+<!-- 結果表示エリア -->
+<div id="result"></div>
+<button id="ai-button" onclick="generateReading()">AIに占ってもらう</button>
+<div id="ai-evaluation"></div>
+        
 
     <!-- JSはbodyの最後に書く -->
-    <script src="app.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

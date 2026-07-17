@@ -123,16 +123,6 @@ button {
     align-items: center;
 }
 
-/* 逆位置の時、カード内の「名前コンテナ」だけを180度回す */
-.is-reversed .name-container {
-    transform: rotate(180deg);
-}
-
-/* その他の要素はそのまま */
-.card-meta, .card-advice {
-    text-align: center;
-}
-
 .name-container {
     text-align: center;
     margin: 10px 0; /* 上下の余白を確保 */
@@ -161,11 +151,6 @@ button {
     cursor: pointer;
 }
 
-/* 逆カードの場合のスタイル */
-.card-item.is-reversed {
-    transform: rotate(180deg); /* 180度回転 */
-}
-
 /* カードを引いた瞬間のアニメーション */
 .card-item.appear {
     animation: flipIn 0.8s ease-out forwards;
@@ -187,4 +172,14 @@ button {
     background-color: #ffcccc !important;
     border: 2px solid #ff9999 !important;
     box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+}
+
+/* 名前エリアだけを180度回転させる（修正） */
+.card-item.is-reversed .name-container {
+    transform: rotate(180deg);
+}
+
+/* その他の要素はそのまま */
+.card-meta, .card-advice {
+    text-align: center;
 }
