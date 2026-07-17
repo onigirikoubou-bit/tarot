@@ -181,3 +181,41 @@ ${cardInfoText}
         evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
     }
 }
+
+async function requestAIEvaluation() {
+    console.log("requestAIEvaluation を実行します");
+
+    // 1. 結果表示エリアを取得
+    const resultDiv = document.getElementById("ai-evaluation");
+    if (!resultDiv) {
+        console.error("ai-evaluation エリアが見つかりません");
+        return;
+    }
+
+    // 2. カードデータを確認
+    if (typeof drawnCards === 'undefined' || drawnCards.length === 0) {
+        alert("カードを引いてから押してください。");
+        return;
+    }
+
+    resultDiv.innerText = "鑑定中...";
+
+    try {
+        // 3. サーバへのリクエスト（ここはご自身の既存コードに合わせて修正してください）
+        // おそらく既存の generateReading() で使っている fetch 先と同じはずです
+        const response = await fetch('/api/evaluate', { // ここを既存の正しいエンドポイントに合わせる必要があります
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cards: drawnCards })
+        });
+
+        const data = await response.json();
+        
+        // 4. 結果を画面に反映
+        resultDiv.innerText = data.result || JSON.stringify(data);
+
+    } catch (error) {
+        console.error("通信エラー:", error);
+        resultDiv.innerText = "通信に失敗しました。";
+    }
+}
