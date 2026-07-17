@@ -43,7 +43,7 @@ ${cardInfoText}
 `;
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // ※モデル名は最新に合わせて確認してください
+        const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" }); // ※モデル名は最新に合わせて確認してください
         const result = await model.generateContent(prompt);
         const response = await result.response;
         res.json({ message: response.text() });
