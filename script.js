@@ -126,6 +126,7 @@ function displayCards(selectedCards) {
 
 // AIへ依頼する関数
 async function generateReading() {
+    console.log("ボタンが押されました！鑑定を開始します。"); // ★これを追加
     if (drawnCards.length === 0) {
         alert("先にカードを引いてください！");
         return;
