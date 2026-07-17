@@ -153,10 +153,27 @@ ${cardInfoText}
 `;
 
     try {
-        // ※ここは後ほど具体的なAPI接続コードに置き換えます
-        const response = await callGeminiAPI(prompt); 
-        evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${response}</p>`;
+        // ★ここを書き換えます
+        const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            // バックエンドが受け取れるように drawnCards をそのまま渡します
+            body: JSON.stringify({ cards: drawnCards }), 
+        });
+
+        if (!response.ok) {
+            throw new Error('サーバーからの応答がありません');
+        }
+
+        const data = await response.json();
+        
+        // ★鑑定結果を画面に表示
+        evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
+
     } catch (error) {
+        console.error('通信エラー:', error);
         evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
     }
 }
