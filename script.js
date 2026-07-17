@@ -125,13 +125,38 @@ function displayCards(selectedCards) {
 }
 
 // AIへ依頼する関数
-function requestAIEvaluation() {
+async function generateReading() {
     if (drawnCards.length === 0) {
-        alert("まだカードを引いていません。");
+        alert("先にカードを引いてください！");
         return;
     }
-    
-    // ここでAIに drawnCards を渡して解釈してもらう
-    console.log("AIに送信するカードリスト:", drawnCards);
-    // ...AI呼び出し処理
+
+    const evaluationDiv = document.getElementById('ai-evaluation');
+    evaluationDiv.innerHTML = "鑑定中...AIがカードの並びからメッセージを読み取っています...";
+
+    // AIに渡すカード情報の文字列を作成
+    const cardInfoText = drawnCards.map((c, index) => {
+        const pos = c.isReversed ? "逆位置" : "正位置";
+        return `${index + 1}枚目: ${c.name} (${pos}) - キーワード: ${c.keywords.join(', ')}`;
+    }).join('\n');
+
+    // Gemini APIに投げるプロンプト
+    const prompt = `
+あなたはプロのタロット占い師です。以下のカードの並びから、ユーザーの悩みに対する鑑定結果を書いてください。
+トーンは優しく、しかし心に深く届くような言葉でお願いします。
+
+---
+${cardInfoText}
+---
+
+上記の結果から、全体的なストーリーを読み解き、鑑定文を作成してください。
+`;
+
+    try {
+        // ※ここは後ほど具体的なAPI接続コードに置き換えます
+        const response = await callGeminiAPI(prompt); 
+        evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${response}</p>`;
+    } catch (error) {
+        evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
+    }
 }

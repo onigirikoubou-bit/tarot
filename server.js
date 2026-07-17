@@ -4,6 +4,11 @@ const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
+// server.js の API 定義部分のどこかに追記
+app.get('/', (req, res) => {
+    res.send('Server is running!');
+});
+
 const app = express();
 app.use(cors({
     origin: [
