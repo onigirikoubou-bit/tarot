@@ -4,6 +4,9 @@ let remainingDeck = [];
 let drawnCards = [];    
 const MAX_CARDS = 7; // 最大枚数の定数
 
+// script.js の一番下にこれだけ追記してください
+window.generateReading = generateReading;
+
 // --- 1. カードデータの読み込み ---
 async function loadCards() {
     try {
@@ -178,6 +181,3 @@ ${cardInfoText}
         evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
     }
 }
-
-// script.js の一番下にこれだけ追記してください
-window.generateReading = generateReading;
