@@ -177,3 +177,6 @@ ${cardInfoText}
         evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
     }
 }
+
+// script.js の一番下にこれだけ追記してください
+window.generateReading = generateReading;
