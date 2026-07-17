@@ -6,8 +6,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 app.use(cors({
-    origin: 'https://github.com/onigirikoubou-bit/tarot', // ここを実際のURLに書き換え
-    methods: ['POST']
+    origin: [
+        'https://onigirikoubou-bit.github.io', // あなたのフロントエンド（GitHub PagesのURL）
+        'https://tarot-8qlz.onrender.com'      // 念のため自分自身からのアクセスも許可
+    ],
+    methods: ['GET', 'POST']
 }));
 app.use(express.json());
 
