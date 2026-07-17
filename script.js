@@ -212,7 +212,12 @@ async function requestAIEvaluation() {
         const data = await response.json();
         
         // 4. 結果を画面に反映
-        resultDiv.innerText = data.result || JSON.stringify(data);
+        if (data && data.message) {
+    // 改行コード（\n）をHTMLの改行タグ（<br>）に変換して表示する
+    resultDiv.innerHTML = data.message.replace(/\n/g, '<br>');
+} else {
+    resultDiv.innerText = "エラー: 正しい形式のデータが受け取れませんでした";
+}
 
     } catch (error) {
         console.error("通信エラー:", error);

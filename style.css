@@ -49,13 +49,14 @@ button {
 }
 
 /* コンテナ設定 */
+/* style.css に追加 */
 #result {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding-top: 20px; /* 必要最低限の隙間 */
-    margin-top: 30px;
+    max-width: 600px;    /* 最大幅を600pxに制限 */
+    margin: 20px auto;   /* 中央寄せ */
+    padding: 20px;
+    line-height: 1.6;    /* 行間を広げて読みやすく */
+    background: #f9f9f9; /* 薄い背景色で区別 */
+    border-radius: 8px;  /* 角を丸く */
 }
 
 /* 親要素に余裕を持たせる */
