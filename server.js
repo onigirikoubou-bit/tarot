@@ -1,30 +1,32 @@
-// npm install express cors dotenv @google/generative-ai
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+require('dotenv').config();
 
-// server.js の API 定義部分のどこかに追記
+const app = express(); // ★これが抜けていました
+
+// CORS設定（フロントエンドからの通信を許可）
+app.use(cors()); 
+
+// JSON解析
+app.use(express.json());
+
+// 動作確認用ルート
 app.get('/', (req, res) => {
     res.send('Server is running!');
 });
 
-const app = express();
-app.use(cors({
-    origin: [
-        'https://onigirikoubou-bit.github.io', // あなたのフロントエンド（GitHub PagesのURL）
-        'https://tarot-8qlz.onrender.com'      // 念のため自分自身からのアクセスも許可
-    ],
-    methods: ['GET', 'POST']
-}));
-app.use(express.json());
-
+// AIの初期化
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// 鑑定APIエンドポイント
 app.post('/api/tarot-reading', async (req, res) => {
     const { cards } = req.body;
 
-    // プロンプト作成
+    if (!cards || !Array.isArray(cards)) {
+        return res.status(400).json({ message: "カードデータが正しく送信されていません。" });
+    }
+
     const cardInfoText = cards.map((c, index) => {
         const pos = c.isReversed ? "逆位置" : "正位置";
         return `${index + 1}枚目: ${c.name} (${pos}) - 意味: ${c.isReversed ? c.reversed_meaning : c.upright_meaning}`;
@@ -41,7 +43,7 @@ ${cardInfoText}
 `;
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // ※モデル名は最新に合わせて確認してください
         const result = await model.generateContent(prompt);
         const response = await result.response;
         res.json({ message: response.text() });
