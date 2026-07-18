@@ -183,44 +183,40 @@ ${cardInfoText}
 }
 
 async function requestAIEvaluation(drawnCards) {
-
-    // 1. 結果表示エリアを取得
-    const messageArea = document.getElementById('ai-message-area'); // 変更
-    messageArea.innerHTML = data.message.replace(/\n/g, '<br>');
-    if (!resultDiv) {
-        console.error("ai-evaluation エリアが見つかりません");
-        return;
-    }
-
-    // 2. カードデータを確認
+    // 1. カードデータを確認（最初に行う）
     if (typeof drawnCards === 'undefined' || drawnCards.length === 0) {
         alert("カードを引いてから押してください。");
         return;
     }
 
-    resultDiv.innerText = "鑑定中...";
+    // 2. 結果表示エリアを取得
+    const messageArea = document.getElementById('ai-message-area');
+    if (!messageArea) {
+        console.error("ai-message-area エリアが見つかりません");
+        return;
+    }
+
+    messageArea.innerText = "鑑定中..."; // ここで「鑑定中」を表示
 
     try {
-        // 3. サーバへのリクエスト（ここはご自身の既存コードに合わせて修正してください）
-        // おそらく既存の generateReading() で使っている fetch 先と同じはずです
-        const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', { // ここを既存の正しいエンドポイントに合わせる必要があります
+        // 3. サーバへのリクエスト
+        const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ cards: drawnCards })
         });
 
+        // 4. 通信成功後にデータを取得
         const data = await response.json();
         
-        // 4. 結果を画面に反映
+        // 5. 結果を画面に反映（データ取得後に実行する）
         if (data && data.message) {
-    // 改行コード（\n）をHTMLの改行タグ（<br>）に変換して表示する
-    resultDiv.innerHTML = data.message.replace(/\n/g, '<br>');
-} else {
-    resultDiv.innerText = "エラー: 正しい形式のデータが受け取れませんでした";
-}
-
+            messageArea.innerHTML = data.message.replace(/\n/g, '<br>');
+        } else {
+            messageArea.innerText = "エラー: 鑑定結果を受け取れませんでした。";
+        }
     } catch (error) {
         console.error("通信エラー:", error);
-        resultDiv.innerText = "通信に失敗しました。";
+        messageArea.innerText = "通信エラーが発生しました。もう一度試してください。";
     }
 }
