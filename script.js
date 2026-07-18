@@ -127,9 +127,7 @@ function displayCards(selectedCards) {
 
     // 引数なしで定義します
 async function requestAIEvaluation() {
-    // コンソールで確認できたグローバル変数 drawnCards を直接使います
-    // もしグローバルに存在しない場合のために、念のため window.drawnCards もチェックします
-    const cardsToEvaluate = typeof drawnCards !== 'undefined' ? drawnCards : window.drawnCards;
+        const cardsToEvaluate = typeof drawnCards !== 'undefined' ? drawnCards : window.drawnCards;
 
     // 1. カードデータを確認
     if (!cardsToEvaluate || cardsToEvaluate.length === 0) {
@@ -144,30 +142,26 @@ async function requestAIEvaluation() {
         return;
     }
 
-    evaluationDiv.innerText = "鑑定中...";
+         // ★ポイント：ここで一度文字色を黒系にして、ハッキリと表示させる
+    evaluationDiv.style.color = "#333";
+    evaluationDiv.innerText = "鑑定中...AIがカードからのメッセージを読み取っています...";
 
     try {
-        // 3. サーバへのリクエスト
         const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cards: cardsToEvaluate }) // 確実に変数を送る
+            body: JSON.stringify({ cards: cardsToEvaluate })
         });
 
-        if (!response.ok) {
-            throw new Error('サーバーからの応答がありません');
-        }
+        if (!response.ok) throw new Error('サーバーエラー');
 
         const data = await response.json();
         
-        // 4. 結果を画面に表示
         if (data && data.message) {
+            // ★結果を表示する際は innerHTML で装飾可能に
             evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
-        } else {
-            evaluationDiv.innerText = "エラー: 鑑定結果を受け取れませんでした。";
         }
     } catch (error) {
-        console.error('通信エラー:', error);
-        evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
+        evaluationDiv.innerText = "申し訳ありません、鑑定中にエラーが発生しました。";
     }
 }

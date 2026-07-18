@@ -186,15 +186,20 @@ button {
     text-align: center;
 }
 
-/* AIの回答エリア */
 #ai-message-area {
-    width: 90%;
-    max-width: 600px;
-    margin: 20px auto;
+    /* 読みやすい濃い色に設定 */
+    color: #333333; 
+    
+    /* 背景色を白にしてコントラストを確保 */
+    background-color: #ffffff;
+    
+    /* 見やすさを向上 */
     padding: 20px;
-    line-height: 1.6;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    
+    /* 鑑定中の文字も読みやすく */
+    font-size: 16px;
+    line-height: 1.8;
 }
