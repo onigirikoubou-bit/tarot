@@ -234,7 +234,8 @@ function showHistoryDetail(index) {
 }
 
 // 3. モーダル表示関数
-function showHistoryDetail(index) {
+// 履歴詳細表示（修正版）
+window.showHistoryDetail = function(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
     if (!item) return;
@@ -245,24 +246,20 @@ function showHistoryDetail(index) {
     const cardsHtml = item.cards.map(card => {
         const isReversed = card.isReversed;
         const displayName = isReversed ? `${card.name} (逆)` : card.name;
-        // カード名だけを回転させるためのクラス
         const nameClass = isReversed ? 'rotate-180' : '';
         const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
 
+        // ★逆位置なら背景をピンク(#fff0f5)、枠線をピンク(#ff69b4)にする
+        const bgColor = isReversed ? '#fff0f5' : '#fff';
+        const borderColor = isReversed ? '#ff69b4' : '#333';
+
         return `
-            <div class="card-item" style="width:160px; margin:10px; padding:15px; border:2px solid #333; border-radius:15px; background:#fff; display:inline-block; vertical-align:top; color:#333; text-align:center;">
-                <!-- ① 大小アルカナ (回転なし) -->
+            <div style="width:160px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center;">
                 <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
-                
-                <!-- ② 線の仕切り -->
-                <hr style="border:0; border-top:1px solid #333; margin:8px 0;">
-                
-                <!-- ③ カード名 (回転あり) -->
+                <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
                 <h4 style="margin:5px 0; color:#333; font-size:1.1rem;">
                     <span class="${nameClass}" style="display:inline-block;">${displayName}</span>
                 </h4>
-                
-                <!-- ④ カードの性格（意味） (回転なし) -->
                 <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
             </div>
         `;
@@ -278,9 +275,8 @@ function showHistoryDetail(index) {
             ${item.message.replace(/\n/g, '<br>')}
         </div>
     `;
-    
     modal.style.display = 'block';
-}
+};
 
 // 4. モーダルを閉じる関数（重複を解消して一つにまとめました）
 function closeModal() {
@@ -313,6 +309,18 @@ window.toggleHistory = function() {
         }
     } else {
         area.style.display = 'none';
+    }
+};
+
+window.resetCards = function() {
+    const cardArea = document.getElementById('card-area'); // あなたのカード表示エリアのID
+    if (cardArea) {
+        cardArea.innerHTML = ''; // カードの表示を一旦消去する
+        
+        // もし「裏返しのカード」を再表示したい場合は、ここでカードを表示する関数を呼び出す
+        // showBackCards(); 
+        
+        console.log("カードをリセットしました");
     }
 };
 
