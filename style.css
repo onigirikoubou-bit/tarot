@@ -321,3 +321,8 @@ button {
     color: #333333 !important; 
     opacity: 1 !important;
 }
+
+.rotate-180 {
+    transform: rotate(180deg);
+    display: inline-block;
+}

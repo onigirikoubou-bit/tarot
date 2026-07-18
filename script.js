@@ -267,7 +267,6 @@ function loadAndDisplayHistory() {
     `).join('');
 }
 
-// 3. モーダル表示関数（カード詳細を表示できるように修正）
 // 3. モーダル表示関数
 function showHistoryDetail(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
@@ -280,22 +279,25 @@ function showHistoryDetail(index) {
     const cardsHtml = item.cards.map(card => {
         const isReversed = card.isReversed;
         const displayName = isReversed ? `${card.name} (逆)` : card.name;
-        const cardClass = isReversed ? 'card-item negative is-reversed' : 'card-item';
+        // カード名だけを回転させるためのクラス
+        const nameClass = isReversed ? 'rotate-180' : '';
         const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
 
         return `
-            <div class="${cardClass}" style="width:160px; margin:10px; padding:10px; border:1px solid #333; border-radius:10px; background:#fff; display:inline-block; vertical-align:top; color:#333; text-align:center;">
-                <!-- ① 大小アルカナ -->
-                <p style="font-size:0.75rem; color:#666; margin:0 0 5px 0;">${card.category}</p>
+            <div class="card-item" style="width:160px; margin:10px; padding:15px; border:2px solid #333; border-radius:15px; background:#fff; display:inline-block; vertical-align:top; color:#333; text-align:center;">
+                <!-- ① 大小アルカナ (回転なし) -->
+                <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
                 
                 <!-- ② 線の仕切り -->
-                <hr style="border:0; border-top:1px solid #333; margin:5px 0;">
+                <hr style="border:0; border-top:1px solid #333; margin:8px 0;">
                 
-                <!-- ③ カード名 -->
-                <h4 style="margin:5px 0; color:#333;">${displayName}</h4>
+                <!-- ③ カード名 (回転あり) -->
+                <h4 style="margin:5px 0; color:#333; font-size:1.1rem;">
+                    <span class="${nameClass}" style="display:inline-block;">${displayName}</span>
+                </h4>
                 
-                <!-- ④ カードの性格（意味） -->
-                <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0;">${meaning}</p>
+                <!-- ④ カードの性格（意味） (回転なし) -->
+                <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
             </div>
         `;
     }).join('');
