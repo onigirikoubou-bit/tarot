@@ -156,47 +156,21 @@ ${cardInfoText}
 上記の結果から、全体的なストーリーを読み解き、鑑定文を作成してください。
 `;
 
-    try {
-        // ★ここを書き換えます
-        const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // バックエンドが受け取れるように drawnCards をそのまま渡します
-            body: JSON.stringify({ cards: drawnCards }), 
-        });
-
-        if (!response.ok) {
-            throw new Error('サーバーからの応答がありません');
-        }
-
-        const data = await response.json();
-        
-        // ★鑑定結果を画面に表示
-        evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
-
-    } catch (error) {
-        console.error('通信エラー:', error);
-        evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
-    }
-}
-
-async function requestAIEvaluation(drawnCards) {
-    // 1. カードデータを確認（最初に行う）
+    async function requestAIEvaluation(drawnCards) {
+    // 1. カードデータを確認
     if (typeof drawnCards === 'undefined' || drawnCards.length === 0) {
         alert("カードを引いてから押してください。");
         return;
     }
 
     // 2. 結果表示エリアを取得
-    const messageArea = document.getElementById('ai-message-area');
-    if (!messageArea) {
+    const evaluationDiv = document.getElementById('ai-message-area');
+    if (!evaluationDiv) {
         console.error("ai-message-area エリアが見つかりません");
         return;
     }
 
-    messageArea.innerText = "鑑定中..."; // ここで「鑑定中」を表示
+    evaluationDiv.innerText = "鑑定中...";
 
     try {
         // 3. サーバへのリクエスト
@@ -206,17 +180,20 @@ async function requestAIEvaluation(drawnCards) {
             body: JSON.stringify({ cards: drawnCards })
         });
 
-        // 4. 通信成功後にデータを取得
+        if (!response.ok) {
+            throw new Error('サーバーからの応答がありません');
+        }
+
         const data = await response.json();
         
-        // 5. 結果を画面に反映（データ取得後に実行する）
+        // 4. 結果を画面に表示
         if (data && data.message) {
-            messageArea.innerHTML = data.message.replace(/\n/g, '<br>');
+            evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
         } else {
-            messageArea.innerText = "エラー: 鑑定結果を受け取れませんでした。";
+            evaluationDiv.innerText = "エラー: 鑑定結果を受け取れませんでした。";
         }
     } catch (error) {
-        console.error("通信エラー:", error);
-        messageArea.innerText = "通信エラーが発生しました。もう一度試してください。";
+        console.error('通信エラー:', error);
+        evaluationDiv.innerHTML = "申し訳ありません、鑑定中にエラーが発生しました。もう一度試してください。";
     }
 }
