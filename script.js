@@ -204,67 +204,33 @@ function showHistoryDetail(index) {
     // モーダルの中身を作成
     // カード情報を再現（鑑定結果画面のカード表示ロジックを流用）
     const cardsHtml = item.cards.map(card => {
-        const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
-        const cardClass = card.isReversed ? 'card-item negative is-reversed' : 'card-item';
-        // 必要に応じて style.css で .card-item などの定義が必要です
-        return `
-            <div class="${cardClass}" style="border: 1px solid #ccc; padding: 10px; width: 150px; margin-bottom: 10px; border-radius: 8px;">
-                <h4>${displayName}</h4>
-                <p><small>${card.category}</small></p>
-                <p><em>${card.isReversed ? card.reversed_meaning : card.upright_meaning}</em></p>
-            </div>
-        `;
-    }).join('');
+    const isReversed = card.isReversed;
+    const displayName = isReversed ? `${card.name} (逆)` : card.name;
+    const nameClass = isReversed ? 'rotate-180' : '';
+    const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
 
-    modalBody.innerHTML = `
-        <h3>鑑定日時: ${item.date}</h3>
-        <hr>
-        <h4>使用したカード</h4>
-        <div style="display:flex; flex-wrap: wrap; gap: 10px; justify-content:center; margin: 15px 0;">
-            ${cardsHtml}
-        </div>
-        <h4>鑑定結果</h4>
-        <div style="text-align:left; line-height:1.6; color:#333;">
-            ${item.message.replace(/\n/g, '<br>')}
+    // ★修正ポイント：逆位置なら背景を薄いピンク(#fff0f5)にし、枠線を赤系にする
+    const bgColor = isReversed ? '#fff0f5' : '#fff';
+    const borderColor = isReversed ? '#ff69b4' : '#333';
+
+    return `
+        <div class="card-item" style="width:160px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center;">
+            <!-- ① 大小アルカナ -->
+            <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
+            
+            <!-- ② 線の仕切り -->
+            <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
+            
+            <!-- ③ カード名 (回転あり) -->
+            <h4 style="margin:5px 0; color:#333; font-size:1.1rem;">
+                <span class="${nameClass}" style="display:inline-block;">${displayName}</span>
+            </h4>
+            
+            <!-- ④ カードの性格（意味） -->
+            <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
         </div>
     `;
-}
-
-// --- 履歴関連機能を末尾にまとめて定義 ---
-
-// 1. ボタン用関数（表示・非表示の切り替え）
-function toggleHistory() {
-    const area = document.getElementById('history-area');
-    if (!area) return;
-
-    if (area.style.display === 'none' || area.style.display === '') {
-        area.style.display = 'block';
-        loadAndDisplayHistory();
-    } else {
-        area.style.display = 'none';
-    }
-}
-
-// 2. 履歴描画関数
-function loadAndDisplayHistory() {
-    const list = document.getElementById('history-list');
-    if (!list) return;
-    
-    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
-    
-    if (history.length === 0) {
-        list.innerHTML = "<p style='color:#333; text-align:center;'>まだ履歴がありません。</p>";
-        return;
-    }
-    
-    // mapのインデックス(i)を直接onclickに渡す
-    list.innerHTML = history.map((item, i) => `
-        <div class="history-item" onclick="showHistoryDetail(${i})" 
-             style="cursor:pointer; background:#fff; padding:15px; margin-bottom:10px; border:1px solid #ccc; color:#333;">
-            <p><strong>鑑定日時: ${item.date}</strong></p>
-            <p style="color:#333;">${item.message.substring(0, 40)}...</p>
-        </div>
-    `).join('');
+}).join('');
 }
 
 // 3. モーダル表示関数
