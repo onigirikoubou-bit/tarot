@@ -257,8 +257,9 @@ function loadAndDisplayHistory() {
         return;
     }
     
-    list.innerHTML = history.map((item, index) => `
-        <div class="history-item" onclick="showHistoryDetail(${index})" 
+    // mapのインデックス(i)を直接onclickに渡す
+    list.innerHTML = history.map((item, i) => `
+        <div class="history-item" onclick="showHistoryDetail(${i})" 
              style="cursor:pointer; background:#fff; padding:15px; margin-bottom:10px; border:1px solid #ccc; color:#333;">
             <p><strong>鑑定日時: ${item.date}</strong></p>
             <p style="color:#333;">${item.message.substring(0, 40)}...</p>
