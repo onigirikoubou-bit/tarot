@@ -268,6 +268,7 @@ function loadAndDisplayHistory() {
 }
 
 // 3. モーダル表示関数（カード詳細を表示できるように修正）
+// 3. モーダル表示関数
 function showHistoryDetail(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -276,20 +277,23 @@ function showHistoryDetail(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
-    // 鑑定結果画面と同じ .card-item クラスを付与したHTMLを生成
     const cardsHtml = item.cards.map(card => {
         const isReversed = card.isReversed;
         const displayName = isReversed ? `${card.name} (逆)` : card.name;
         const cardClass = isReversed ? 'card-item negative is-reversed' : 'card-item';
         const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
 
+        // ★修正ポイント：HTML構造を並び替え、文字色を #333 に明示
         return `
-            <div class="${cardClass}" style="width:160px; margin:10px; padding:10px; border:1px solid #333; border-radius:10px; background:#fff; display:inline-block; vertical-align:top;">
+            <div class="${cardClass}" style="width:160px; margin:10px; padding:10px; border:1px solid #333; border-radius:10px; background:#fff; display:inline-block; vertical-align:top; color:#333;">
                 <div class="name-container">
-                    <h4 style="margin:5px 0;">${displayName}</h4>
+                    <!-- ① 大小アルカナを先に表示 -->
+                    <p style="font-size:0.75rem; color:#666; margin:5px 0;">${card.category}</p>
+                    <!-- ② カード名（文字色を #333 に設定） -->
+                    <h4 style="margin:5px 0; color:#333;">${displayName}</h4>
                 </div>
-                <p style="font-size:0.75rem; color:#666; margin:5px 0;">${card.category}</p>
-                <hr>
+                <hr style="border:0; border-top:1px solid #ddd;">
+                <!-- ③ カードの性格（意味） -->
                 <p style="font-size:0.85rem; color:#333; margin:5px 0;">${meaning}</p>
             </div>
         `;
