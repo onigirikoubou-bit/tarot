@@ -100,8 +100,8 @@ function resetDeck() {
 
 // --- 4. 画面表示処理 ---
 function displayCards(selectedCards) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = ''; 
+    const displayArea = document.getElementById('card-display-area'); // 変更
+    displayArea.innerHTML = ''; 
     
     selectedCards.forEach((card) => {
         const cardElement = document.createElement('div');
@@ -182,11 +182,11 @@ ${cardInfoText}
     }
 }
 
-async function requestAIEvaluation() {
-    console.log("requestAIEvaluation を実行します");
+async function requestAIEvaluation(drawnCards) {
 
     // 1. 結果表示エリアを取得
-    const resultDiv = document.getElementById("ai-evaluation");
+    const messageArea = document.getElementById('ai-message-area'); // 変更
+    messageArea.innerHTML = data.message.replace(/\n/g, '<br>');
     if (!resultDiv) {
         console.error("ai-evaluation エリアが見つかりません");
         return;

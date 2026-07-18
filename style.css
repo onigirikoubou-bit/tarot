@@ -59,10 +59,11 @@ button {
     border-radius: 8px;  /* 角を丸く */
 }
 
-/* 親要素に余裕を持たせる */
+/* カードが並ぶエリア（必要に応じて調整） */
 #card-display-area {
-    padding-top: 20px; /* ここで一番上の隙間を作ります */
-    padding-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 /* カード全体のスタイル */
@@ -183,4 +184,17 @@ button {
 /* その他の要素はそのまま */
 .card-meta, .card-advice {
     text-align: center;
+}
+
+/* AIの回答エリア */
+#ai-message-area {
+    width: 90%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    line-height: 1.6;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
 }
