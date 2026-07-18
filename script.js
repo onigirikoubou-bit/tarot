@@ -228,41 +228,45 @@ function showHistoryDetail(index) {
             ${item.message.replace(/\n/g, '<br>')}
         </div>
     `;
-    
-    // モーダルを表示
-    modal.style.display = 'block';
 }
 
-// --- モーダルを閉じる関数 ---
-function closeModal() {
-    const modal = document.getElementById('history-modal');
-    modal.style.display = 'none';
-}
+// --- 履歴関連機能を末尾にまとめて定義 ---
 
-// 画面外をクリックしてもモーダルを閉じる処理（おまけ）
-window.onclick = function(event) {
-    const modal = document.getElementById('history-modal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// --- 1. ボタンを押した時に履歴の表示/非表示を切り替える関数 ---
+// 1. ボタン用関数（表示・非表示の切り替え）
 function toggleHistory() {
-        alert("ボタンが押されました！"); // これが表示されるか確認
-    const historyArea = document.getElementById('history-area');
-    
-    // 表示状態の切り替え
-    if (historyArea.style.display === 'none' || historyArea.style.display === '') {
-        historyArea.style.display = 'block';
-        loadAndDisplayHistory(); // 中身を更新して表示
+    const area = document.getElementById('history-area');
+    if (!area) return;
+
+    if (area.style.display === 'none' || area.style.display === '') {
+        area.style.display = 'block';
+        loadAndDisplayHistory();
     } else {
-        historyArea.style.display = 'none';
+        area.style.display = 'none';
     }
 }
 
+// 2. 履歴描画関数
+function loadAndDisplayHistory() {
+    const list = document.getElementById('history-list');
+    if (!list) return;
+    
+    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
+    
+    if (history.length === 0) {
+        list.innerHTML = "<p style='color:#333; text-align:center;'>まだ履歴がありません。</p>";
+        return;
+    }
+    
+    list.innerHTML = history.map((item, index) => `
+        <div class="history-item" onclick="showHistoryDetail(${index})" 
+             style="cursor:pointer; background:#fff; padding:15px; margin-bottom:10px; border:1px solid #ccc; color:#333;">
+            <p><strong>鑑定日時: ${item.date}</strong></p>
+            <p style="color:#333;">${item.message.substring(0, 40)}...</p>
+        </div>
+    `).join('');
+}
 
-// --- 3. 履歴をクリックした時にモーダルを表示する関数 ---
+// 3. モーダル表示関数
 function showHistoryDetail(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -271,7 +275,6 @@ function showHistoryDetail(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
-    // 中身の組み立て
     const cardsHtml = item.cards.map(card => `
         <div style="border:1px solid #ddd; padding:10px; margin:5px; border-radius:8px; width:150px;">
             <h4>${card.name} ${card.isReversed ? '(逆)' : '(正)'}</h4>
@@ -287,7 +290,16 @@ function showHistoryDetail(index) {
     modal.style.display = 'block';
 }
 
-// --- 4. モーダルを閉じる関数 ---
+// 4. モーダルを閉じる関数（重複を解消して一つにまとめました）
 function closeModal() {
-    document.getElementById('history-modal').style.display = 'none';
+    const modal = document.getElementById('history-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+// 5. 画面外クリックで閉じる処理
+window.onclick = function(event) {
+    const modal = document.getElementById('history-modal');
+    if (event.target == modal) {
+        closeModal(); // 上の closeModal 関数を再利用
+    }
 }
