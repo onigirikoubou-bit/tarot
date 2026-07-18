@@ -295,3 +295,23 @@ window.onclick = function(event) {
         closeModal(); // 上の closeModal 関数を再利用
     }
 }
+
+// 関数を window オブジェクトに直接登録する
+window.toggleHistory = function() {
+    const area = document.getElementById('history-area');
+    if (!area) {
+        console.error("history-area が見つかりません");
+        return;
+    }
+
+    if (area.style.display === 'none' || area.style.display === '') {
+        area.style.display = 'block';
+        if (typeof loadAndDisplayHistory === 'function') {
+            loadAndDisplayHistory();
+        } else {
+            console.error("loadAndDisplayHistory 関数が定義されていません");
+        }
+    } else {
+        area.style.display = 'none';
+    }
+};
