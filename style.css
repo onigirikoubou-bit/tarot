@@ -214,22 +214,24 @@ button {
 }
 
 /* --- 履歴エリア全体のスタイル（幅を鑑定結果に合わせる） --- */
+/* --- 履歴エリア全体のスタイル --- */
 #history-area {
-    margin-top: 40px;
-    /* 鑑定結果エリアと同じ幅（例: 600px）に設定して中央寄せ */
-    max-width: 600px; 
-    width: 90%;
-    margin-left: auto;
-    margin-right: auto;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 600px !important;
+    margin: 20px auto !important;
     padding: 20px;
-    /* 背景色などは好みで */
-    background-color: #f8f9fa;
-    border-radius: 8px;
+    background-color: #ffffff !important; /* ★背景を白に */
+    border-radius: 12px;                  /* ★角を丸く */
+    color: #333333 !important;            /* ★文字を黒に */
+    position: relative !important;
+    z-index: 999;
 }
 
 #history-area h2 {
     text-align: center;
-    color: #333;
+    color: #333333 !important; /* ★ここも明示 */
 }
 
 /* --- 個々の履歴アイテムのスタイル（読みやすく） --- */
@@ -314,9 +316,8 @@ button {
     color: #333;
 }
 
-/* これを追記して、強制的に見やすくする */
-#history-area, #history-list, .history-item {
-    max-width: 600px !important; /* 確実に幅を制限 */
-    margin: 0 auto !important;   /* 中央寄せ */
-    color: #333333 !important;   /* 文字色を黒にする */
+/* #history-list 内の文字を強制的に濃くする */
+#history-list, #history-list p, #history-list strong {
+    color: #333333 !important; 
+    opacity: 1 !important;
 }

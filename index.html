@@ -42,20 +42,11 @@
 <div id="ai-message-area"></div>
    <br>     
 <!-- ボタンを追加 -->
-<button onclick="displayHistory()">鑑定履歴を表示</button>
+<!-- index.htmlの該当箇所 -->
+<button onclick="toggleHistory()">鑑定履歴を表示</button>
 
-<!-- 履歴詳細を表示するためのモーダルウィンドウ（最初は非表示） -->
-<div id="history-modal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <div id="modal-body">
-            <!-- ここに詳細なカード情報と鑑定結果が入ります -->
-        </div>
-    </div>
-</div>
-
-<!-- 既存の履歴リストエリアはそのまま -->
-<div id="history-area" style="max-width: 600px; margin: 0 auto;">
+<!-- style="display: none;" を削除し、CSS側で制御します -->
+<div id="history-area">
     <h2>過去の鑑定履歴</h2>
     <div id="history-list"></div>
 </div>

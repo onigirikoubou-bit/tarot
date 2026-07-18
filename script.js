@@ -246,3 +246,47 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+
+// --- 1. ボタンを押した時に履歴の表示/非表示を切り替える関数 ---
+function toggleHistory() {
+    const historyArea = document.getElementById('history-area');
+    
+    // 表示状態の切り替え
+    if (historyArea.style.display === 'none' || historyArea.style.display === '') {
+        historyArea.style.display = 'block';
+        loadAndDisplayHistory(); // 中身を更新して表示
+    } else {
+        historyArea.style.display = 'none';
+    }
+}
+
+
+// --- 3. 履歴をクリックした時にモーダルを表示する関数 ---
+function showHistoryDetail(index) {
+    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
+    const item = history[index];
+    if (!item) return;
+    
+    const modal = document.getElementById('history-modal');
+    const modalBody = document.getElementById('modal-body');
+    
+    // 中身の組み立て
+    const cardsHtml = item.cards.map(card => `
+        <div style="border:1px solid #ddd; padding:10px; margin:5px; border-radius:8px; width:150px;">
+            <h4>${card.name} ${card.isReversed ? '(逆)' : '(正)'}</h4>
+        </div>
+    `).join('');
+
+    modalBody.innerHTML = `
+        <h3 style="color:#333;">鑑定日時: ${item.date}</h3>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center;">${cardsHtml}</div>
+        <p style="color:#333; line-height:1.6; margin-top:20px;">${item.message.replace(/\n/g, '<br>')}</p>
+    `;
+    
+    modal.style.display = 'block';
+}
+
+// --- 4. モーダルを閉じる関数 ---
+function closeModal() {
+    document.getElementById('history-modal').style.display = 'none';
+}
