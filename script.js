@@ -160,8 +160,48 @@ async function requestAIEvaluation() {
         if (data && data.message) {
             // ★結果を表示する際は innerHTML で装飾可能に
             evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
+
+            // 結果を保存する関数
+function saveReadingToHistory(cards, message) {
+    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
+    const newEntry = {
+        date: new Date().toLocaleString(),
+        cards: cards,
+        message: message
+    };
+    
+    // 新しい順に保存（最大10件までにする）
+    history.unshift(newEntry);
+    if (history.length > 10) history.pop();
+    
+    localStorage.setItem('tarotHistory', JSON.stringify(history));
+}
+
+// requestAIEvaluation 内の、結果を表示する部分をこう書き換えます
+if (data && data.message) {
+    evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
+    
+    // ★追加：ここで保存を実行！
+    saveReadingToHistory(cardsToEvaluate, data.message);
+}
+
         }
     } catch (error) {
         evaluationDiv.innerText = "申し訳ありません、鑑定中にエラーが発生しました。";
     }
 }
+
+function displayHistory() {
+    const historyList = document.getElementById('history-list');
+    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
+    
+    historyList.innerHTML = history.map(item => `
+        <div class="history-item">
+            <p><strong>${item.date}</strong></p>
+            <p>${item.message.substring(0, 50)}...</p>
+        </div>
+    `).join('');
+}
+
+// 画面読み込み時に履歴を表示
+window.onload = displayHistory;
