@@ -234,7 +234,7 @@ function showHistoryDetail(index) {
 }
 
 // 3. モーダル表示関数
-// 履歴詳細表示（修正版）
+// --- 履歴詳細：縦長カード＆ピンク色反映 ---
 window.showHistoryDetail = function(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -249,15 +249,15 @@ window.showHistoryDetail = function(index) {
         const nameClass = isReversed ? 'rotate-180' : '';
         const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
 
-        // ★逆位置なら背景をピンク(#fff0f5)、枠線をピンク(#ff69b4)にする
         const bgColor = isReversed ? '#fff0f5' : '#fff';
         const borderColor = isReversed ? '#ff69b4' : '#333';
 
+        // ★縦長を維持するため、heightを明示し、フレックスボックスで整えます
         return `
-            <div style="width:160px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center;">
+            <div style="width:150px; min-height:260px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center; box-sizing:border-box;">
                 <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
                 <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
-                <h4 style="margin:5px 0; color:#333; font-size:1.1rem;">
+                <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
                     <span class="${nameClass}" style="display:inline-block;">${displayName}</span>
                 </h4>
                 <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
@@ -267,15 +267,20 @@ window.showHistoryDetail = function(index) {
 
     modalBody.innerHTML = `
         <h3 style="color:#333; text-align:center;">鑑定日時: ${item.date}</h3>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; margin:20px 0;">
-            ${cardsHtml}
-        </div>
-        <hr>
-        <div style="color:#333; line-height:1.8; margin-top:10px; font-size:15px; text-align:left;">
-            ${item.message.replace(/\n/g, '<br>')}
-        </div>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; margin:20px 0;">${cardsHtml}</div>
     `;
     modal.style.display = 'block';
+};
+
+// --- カードリセット機能（カードを表示しているエリアのIDを'card-area'と想定） ---
+window.resetCards = function() {
+    const cardArea = document.getElementById('card-area');
+    if (cardArea) {
+        cardArea.innerHTML = ''; // 中身を消去
+        console.log("カードをリセットしました");
+    } else {
+        alert("カードエリアが見つかりません。HTMLのIDを確認してください。");
+    }
 };
 
 // 4. モーダルを閉じる関数（重複を解消して一つにまとめました）
@@ -312,17 +317,6 @@ window.toggleHistory = function() {
     }
 };
 
-window.resetCards = function() {
-    const cardArea = document.getElementById('card-area'); // あなたのカード表示エリアのID
-    if (cardArea) {
-        cardArea.innerHTML = ''; // カードの表示を一旦消去する
-        
-        // もし「裏返しのカード」を再表示したい場合は、ここでカードを表示する関数を呼び出す
-        // showBackCards(); 
-        
-        console.log("カードをリセットしました");
-    }
-};
 
 // --- 履歴機能を安全に登録 ---
 
