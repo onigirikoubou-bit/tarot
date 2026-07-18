@@ -251,8 +251,6 @@ window.onclick = function(event) {
 function toggleHistory() {
         alert("ボタンが押されました！"); // これが表示されるか確認
     const historyArea = document.getElementById('history-area');
-    console.log("エリアの状態:", historyArea);
-    const historyArea = document.getElementById('history-area');
     
     // 表示状態の切り替え
     if (historyArea.style.display === 'none' || historyArea.style.display === '') {
