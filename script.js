@@ -249,6 +249,9 @@ window.onclick = function(event) {
 
 // --- 1. ボタンを押した時に履歴の表示/非表示を切り替える関数 ---
 function toggleHistory() {
+        alert("ボタンが押されました！"); // これが表示されるか確認
+    const historyArea = document.getElementById('history-area');
+    console.log("エリアの状態:", historyArea);
     const historyArea = document.getElementById('history-area');
     
     // 表示状態の切り替え
