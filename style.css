@@ -187,19 +187,28 @@ button {
 }
 
 #ai-message-area {
-    /* 読みやすい濃い色に設定 */
-    color: #333333; 
+    /* 幅を制限して読みやすくします */
+    max-width: 600px; /* ★ここが重要：好みの幅（600px〜800pxが読みやすいです） */
+    width: 90%;       /* スマホなどの狭い画面では画面幅の90%を使います */
+    margin: 20px auto; /* 左右中央寄せ */
     
-    /* 背景色を白にしてコントラストを確保 */
+    /* 文字色と背景色 */
+    color: #333333;
     background-color: #ffffff;
     
-    /* 見やすさを向上 */
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    
-    /* 鑑定中の文字も読みやすく */
-    font-size: 16px;
+    /* 読みやすくするための余白と装飾 */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 少し柔らかい影 */
     line-height: 1.8;
+    font-size: 16px;
+    text-align: left; /* 左寄せの方が文章は読みやすいです */
+}
+
+/* 見出しのスタイル調整 */
+#ai-message-area h3 {
+    margin-top: 0;
+    color: #2c3e50; /* 少し落ち着いた濃い色 */
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
 }
