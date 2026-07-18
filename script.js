@@ -283,18 +283,19 @@ function showHistoryDetail(index) {
         const cardClass = isReversed ? 'card-item negative is-reversed' : 'card-item';
         const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
 
-        // ★修正ポイント：HTML構造を並び替え、文字色を #333 に明示
         return `
-            <div class="${cardClass}" style="width:160px; margin:10px; padding:10px; border:1px solid #333; border-radius:10px; background:#fff; display:inline-block; vertical-align:top; color:#333;">
-                <div class="name-container">
-                    <!-- ① 大小アルカナを先に表示 -->
-                    <p style="font-size:0.75rem; color:#666; margin:5px 0;">${card.category}</p>
-                    <!-- ② カード名（文字色を #333 に設定） -->
-                    <h4 style="margin:5px 0; color:#333;">${displayName}</h4>
-                </div>
-                <hr style="border:0; border-top:1px solid #ddd;">
-                <!-- ③ カードの性格（意味） -->
-                <p style="font-size:0.85rem; color:#333; margin:5px 0;">${meaning}</p>
+            <div class="${cardClass}" style="width:160px; margin:10px; padding:10px; border:1px solid #333; border-radius:10px; background:#fff; display:inline-block; vertical-align:top; color:#333; text-align:center;">
+                <!-- ① 大小アルカナ -->
+                <p style="font-size:0.75rem; color:#666; margin:0 0 5px 0;">${card.category}</p>
+                
+                <!-- ② 線の仕切り -->
+                <hr style="border:0; border-top:1px solid #333; margin:5px 0;">
+                
+                <!-- ③ カード名 -->
+                <h4 style="margin:5px 0; color:#333;">${displayName}</h4>
+                
+                <!-- ④ カードの性格（意味） -->
+                <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0;">${meaning}</p>
             </div>
         `;
     }).join('');
