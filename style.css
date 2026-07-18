@@ -313,3 +313,10 @@ button {
     line-height: 1.8;
     color: #333;
 }
+
+/* これを追記して、強制的に見やすくする */
+#history-area, #history-list, .history-item {
+    max-width: 600px !important; /* 確実に幅を制限 */
+    margin: 0 auto !important;   /* 中央寄せ */
+    color: #333333 !important;   /* 文字色を黒にする */
+}
