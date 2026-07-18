@@ -192,7 +192,7 @@ if (data && data.message) {
 }
 
 // --- 履歴の詳細を表示する関数（モーダルを開く） ---
-function showHistoryDetail(index) {
+function (index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
     
@@ -267,7 +267,7 @@ function loadAndDisplayHistory() {
     `).join('');
 }
 
-// 3. モーダル表示関数
+// 3. モーダル表示関数（カード詳細を表示できるように修正）
 function showHistoryDetail(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -276,16 +276,30 @@ function showHistoryDetail(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
-    const cardsHtml = item.cards.map(card => `
-        <div style="border:1px solid #ddd; padding:10px; margin:5px; border-radius:8px; width:150px;">
-            <h4>${card.name} ${card.isReversed ? '(逆)' : '(正)'}</h4>
-        </div>
-    `).join('');
+    // カード情報を詳細に組み立てる
+    const cardsHtml = item.cards.map(card => {
+        const status = card.isReversed ? '(逆位置)' : '(正位置)';
+        const meaning = card.isReversed ? card.reversed_meaning : card.upright_meaning;
+        
+        return `
+            <div style="border:1px solid #ccc; padding:15px; margin:10px; border-radius:10px; width:200px; background:#fff; text-align:center;">
+                <h4 style="margin:0 0 5px 0;">${card.name}</h4>
+                <p style="font-size:0.8rem; color:#666; margin:0;">${status}</p>
+                <p style="font-size:0.9rem; margin-top:10px; color:#333;">${meaning}</p>
+            </div>
+        `;
+    }).join('');
 
     modalBody.innerHTML = `
-        <h3 style="color:#333;">鑑定日時: ${item.date}</h3>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center;">${cardsHtml}</div>
-        <p style="color:#333; line-height:1.6; margin-top:20px;">${item.message.replace(/\n/g, '<br>')}</p>
+        <h3 style="color:#333; text-align:center;">鑑定日時: ${item.date}</h3>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; margin:20px 0;">
+            ${cardsHtml}
+        </div>
+        <hr>
+        <h4 style="color:#333;">鑑定結果</h4>
+        <div style="color:#333; line-height:1.8; margin-top:10px; font-size:15px;">
+            ${item.message.replace(/\n/g, '<br>')}
+        </div>
     `;
     
     modal.style.display = 'block';
