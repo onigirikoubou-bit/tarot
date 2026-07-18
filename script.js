@@ -192,7 +192,7 @@ if (data && data.message) {
 }
 
 // --- 履歴の詳細を表示する関数（モーダルを開く） ---
-function (index) {
+function showHistoryDetail(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
     
