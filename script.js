@@ -252,7 +252,6 @@ window.showHistoryDetail = function(index) {
         const bgColor = isReversed ? '#fff0f5' : '#fff';
         const borderColor = isReversed ? '#ff69b4' : '#333';
 
-        // ★縦長を維持するため、heightを明示し、フレックスボックスで整えます
         return `
             <div style="width:150px; min-height:260px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center; box-sizing:border-box;">
                 <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
@@ -265,21 +264,27 @@ window.showHistoryDetail = function(index) {
         `;
     }).join('');
 
+    // ★ここで回答文章を表示するように修正
     modalBody.innerHTML = `
         <h3 style="color:#333; text-align:center;">鑑定日時: ${item.date}</h3>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; margin:20px 0;">${cardsHtml}</div>
+        <hr>
+        <div style="color:#333; line-height:1.8; margin-top:10px; font-size:15px; text-align:left;">
+            ${item.message ? item.message.replace(/\n/g, '<br>') : 'メッセージなし'}
+        </div>
     `;
     modal.style.display = 'block';
 };
 
 // --- カードリセット機能（カードを表示しているエリアのIDを'card-area'と想定） ---
 window.resetCards = function() {
-    const cardArea = document.getElementById('card-area');
-    if (cardArea) {
-        cardArea.innerHTML = ''; // 中身を消去
-        console.log("カードをリセットしました");
+    // resultの中身を空にすることで、カードも文章もすべて消去されます
+    const resultArea = document.getElementById('result');
+    if (resultArea) {
+        resultArea.innerHTML = ''; 
+        console.log("鑑定結果（カードと文章）をリセットしました");
     } else {
-        alert("カードエリアが見つかりません。HTMLのIDを確認してください。");
+        alert("リセット対象のエリアが見つかりません。");
     }
 };
 
