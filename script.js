@@ -127,38 +127,15 @@ function displayCards(selectedCards) {
     });
 }
 
-// AIへ依頼する関数
-async function generateReading() {
-    console.log("ボタンが押されました！鑑定を開始します。"); // ★これを追加
-    if (drawnCards.length === 0) {
-        alert("先にカードを引いてください！");
-        return;
-    }
 
-    const evaluationDiv = document.getElementById('ai-evaluation');
-    evaluationDiv.innerHTML = "鑑定中...AIがカードの並びからメッセージを読み取っています...";
+    // 引数なしで定義します
+async function requestAIEvaluation() {
+    // コンソールで確認できたグローバル変数 drawnCards を直接使います
+    // もしグローバルに存在しない場合のために、念のため window.drawnCards もチェックします
+    const cardsToEvaluate = typeof drawnCards !== 'undefined' ? drawnCards : window.drawnCards;
 
-    // AIに渡すカード情報の文字列を作成
-    const cardInfoText = drawnCards.map((c, index) => {
-        const pos = c.isReversed ? "逆位置" : "正位置";
-        return `${index + 1}枚目: ${c.name} (${pos}) - キーワード: ${c.keywords.join(', ')}`;
-    }).join('\n');
-
-    // Gemini APIに投げるプロンプト
-    const prompt = `
-あなたはプロのタロット占い師です。以下のカードの並びから、ユーザーの悩みに対する鑑定結果を書いてください。
-トーンは優しく、しかし心に深く届くような言葉でお願いします。
-
----
-${cardInfoText}
----
-
-上記の結果から、全体的なストーリーを読み解き、鑑定文を作成してください。
-`;
-
-    async function requestAIEvaluation(drawnCards) {
     // 1. カードデータを確認
-    if (typeof drawnCards === 'undefined' || drawnCards.length === 0) {
+    if (!cardsToEvaluate || cardsToEvaluate.length === 0) {
         alert("カードを引いてから押してください。");
         return;
     }
@@ -177,7 +154,7 @@ ${cardInfoText}
         const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cards: drawnCards })
+            body: JSON.stringify({ cards: cardsToEvaluate }) // 確実に変数を送る
         });
 
         if (!response.ok) {
