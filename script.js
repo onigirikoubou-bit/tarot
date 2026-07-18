@@ -315,3 +315,40 @@ window.toggleHistory = function() {
         area.style.display = 'none';
     }
 };
+
+// --- 履歴機能を安全に登録 ---
+
+// 1. 履歴描画関数をwindowに登録
+window.loadAndDisplayHistory = function() {
+    const list = document.getElementById('history-list');
+    if (!list) return;
+    
+    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
+    
+    if (history.length === 0) {
+        list.innerHTML = "<p style='color:#333; text-align:center;'>まだ履歴がありません。</p>";
+        return;
+    }
+    
+    list.innerHTML = history.map((item, index) => `
+        <div class="history-item" onclick="showHistoryDetail(${index})" 
+             style="cursor:pointer; background:#fff; padding:15px; margin-bottom:10px; border:1px solid #ccc; color:#333;">
+            <p><strong>鑑定日時: ${item.date}</strong></p>
+            <p style="color:#333;">${item.message.substring(0, 40)}...</p>
+        </div>
+    `).join('');
+};
+
+// 2. toggleHistory 関数をwindowに登録
+window.toggleHistory = function() {
+    const area = document.getElementById('history-area');
+    if (!area) return;
+
+    if (area.style.display === 'none' || area.style.display === '') {
+        area.style.display = 'block';
+        // ここで確実にwindowにある関数を呼ぶ
+        window.loadAndDisplayHistory();
+    } else {
+        area.style.display = 'none';
+    }
+};
