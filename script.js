@@ -195,13 +195,16 @@ function displayHistory() {
     const historyList = document.getElementById('history-list');
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     
+    if (history.length === 0) {
+        historyList.innerHTML = "<p>まだ履歴がありません。</p>";
+        return;
+    }
+    
+    // 履歴をHTMLに変換して表示
     historyList.innerHTML = history.map(item => `
-        <div class="history-item">
-            <p><strong>${item.date}</strong></p>
-            <p>${item.message.substring(0, 50)}...</p>
+        <div class="history-item" style="border-bottom: 1px solid #ccc; margin-bottom: 10px; padding: 10px;">
+            <p><strong>鑑定日時: ${item.date}</strong></p>
+            <p>${item.message.replace(/\n/g, '<br>').substring(0, 100)}...</p>
         </div>
     `).join('');
 }
-
-// 画面読み込み時に履歴を表示
-window.onload = displayHistory;
