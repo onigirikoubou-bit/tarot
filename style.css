@@ -213,16 +213,103 @@ button {
     padding-bottom: 10px;
 }
 
+/* --- 履歴エリア全体のスタイル（幅を鑑定結果に合わせる） --- */
 #history-area {
-    margin-top: 30px;
+    margin-top: 40px;
+    /* 鑑定結果エリアと同じ幅（例: 600px）に設定して中央寄せ */
+    max-width: 600px; 
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    /* 背景色などは好みで */
+    background-color: #f8f9fa;
     border-radius: 8px;
 }
 
+#history-area h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* --- 個々の履歴アイテムのスタイル（読みやすく） --- */
 .history-item {
     background: #fff;
     padding: 15px;
-    border-radius: 5px;
     margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    cursor: pointer; /* クリックできることを示す */
+    transition: background 0.2s;
+}
+
+.history-item:hover {
+    background-color: #f0f0f0; /* ホバー時に少し色を変える */
+}
+
+.history-item p {
+    margin: 5px 0;
+    color: #555; /* 読みやすい濃いグレー */
+    font-size: 14px;
+}
+
+/* 履歴のメッセージ冒頭だけ表示する部分 */
+.history-snippet {
+    font-weight: bold;
+    color: #333;
+}
+
+/* --- モーダルウィンドウ（詳細表示）のスタイル --- */
+.modal {
+    position: fixed; /* 画面に固定 */
+    z-index: 1000; /* 最前面に */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* スクロール可能に */
+    background-color: rgba(0,0,0,0.5); /* 半透明の黒背景 */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto; /* 画面の中央に配置 */
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 700px; /* モーダルの幅 */
+    width: 80%;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* 閉じるボタン (×) */
+.close-modal {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* モーダル内のカード表示エリア（鑑定結果のスタイルを流用） */
+#modal-cards-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+#modal-result-text {
+    line-height: 1.8;
+    color: #333;
 }

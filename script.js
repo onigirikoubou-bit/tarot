@@ -191,20 +191,58 @@ if (data && data.message) {
     }
 }
 
-function displayHistory() {
-    const historyList = document.getElementById('history-list');
+// --- 履歴の詳細を表示する関数（モーダルを開く） ---
+function showHistoryDetail(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
+    const item = history[index];
     
-    if (history.length === 0) {
-        historyList.innerHTML = "<p>まだ履歴がありません。</p>";
-        return;
-    }
+    if (!item) return;
     
-    // 履歴をHTMLに変換して表示
-    historyList.innerHTML = history.map(item => `
-        <div class="history-item" style="border-bottom: 1px solid #ccc; margin-bottom: 10px; padding: 10px;">
-            <p><strong>鑑定日時: ${item.date}</strong></p>
-            <p>${item.message.replace(/\n/g, '<br>').substring(0, 100)}...</p>
+    const modal = document.getElementById('history-modal');
+    const modalBody = document.getElementById('modal-body');
+    
+    // モーダルの中身を作成
+    // カード情報を再現（鑑定結果画面のカード表示ロジックを流用）
+    const cardsHtml = item.cards.map(card => {
+        const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
+        const cardClass = card.isReversed ? 'card-item negative is-reversed' : 'card-item';
+        // 必要に応じて style.css で .card-item などの定義が必要です
+        return `
+            <div class="${cardClass}" style="border: 1px solid #ccc; padding: 10px; width: 150px; margin-bottom: 10px; border-radius: 8px;">
+                <h4>${displayName}</h4>
+                <p><small>${card.category}</small></p>
+                <p><em>${card.isReversed ? card.reversed_meaning : card.upright_meaning}</em></p>
+            </div>
+        `;
+    }).join('');
+
+    modalBody.innerHTML = `
+        <h3>鑑定日時: ${item.date}</h3>
+        <hr>
+        <h4>使用したカード</h4>
+        <div style="display:flex; flex-wrap: wrap; gap: 10px; justify-content:center; margin: 15px 0;">
+            ${cardsHtml}
         </div>
-    `).join('');
+        <h4>鑑定結果</h4>
+        <div style="text-align:left; line-height:1.6; color:#333;">
+            ${item.message.replace(/\n/g, '<br>')}
+        </div>
+    `;
+    
+    // モーダルを表示
+    modal.style.display = 'block';
+}
+
+// --- モーダルを閉じる関数 ---
+function closeModal() {
+    const modal = document.getElementById('history-modal');
+    modal.style.display = 'none';
+}
+
+// 画面外をクリックしてもモーダルを閉じる処理（おまけ）
+window.onclick = function(event) {
+    const modal = document.getElementById('history-modal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
 }
