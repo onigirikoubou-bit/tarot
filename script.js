@@ -72,6 +72,13 @@ function appendSingleCard(card) {
         <div style="font-size:0.8rem; color:#444;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
 
+    // appendSingleCard 関数のスタイル内に追加
+cardElement.style.cssText = `
+    /* 以前のスタイルに加え、以下を追記 */
+    flex: 0 0 150px !important; 
+    max-width: 150px !important;
+`;
+
     // クリックイベントを再登録
     cardElement.onclick = function() {
         const modal = document.getElementById('history-modal');
@@ -88,18 +95,24 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 1. DOMのクリア
+    // 1. 表示クリア
     document.getElementById('result').innerHTML = '';
     
-    // 2. 可能性のあるすべての変数名をリセット
-    window.drawnCards = [];
-    if (typeof window.count !== 'undefined') window.count = 0;
-    if (typeof window.drawCount !== 'undefined') window.drawCount = 0;
+    // 2. 配列クリア（カードデータを保持している配列名に変えてください）
+    window.drawnCards = []; 
     
-    // 3. ブラウザの再読み込みは最終手段ですが、これで強制リセットできます
-    // location.reload(); 
+    // 3. 枚数カウンターのリセット（重要）
+    // もし手動でカウンター変数を作っているなら、それを明示的に0にします
+    // 例: var drawCount = 0; がコード内にある場合
+    if (typeof drawCount !== 'undefined') {
+        drawCount = 0; 
+    }
     
-    console.log("リセット完了");
+    // 4. もし「制限」を html の data 属性で持っているなら
+    const resultDiv = document.getElementById('result');
+    resultDiv.dataset.count = 0;
+    
+    console.log("リセット完了しました");
 }
 
 // --- 4. 画面表示処理 ---
