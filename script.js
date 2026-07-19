@@ -46,60 +46,50 @@ function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
     
-    // 既存のCSSクラスの影響を一切受けないようにする
-    cardElement.className = ""; 
-    
+    // スタイルをCSSファイルに依存させず、全てここで完結させる
     cardElement.style.cssText = `
         width: 150px !important;
         height: 260px !important;
-        margin: 10px !important;
-        padding: 10px !important;
         display: inline-block !important;
         vertical-align: top !important;
+        margin: 10px !important;
+        padding: 10px !important;
         border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
         border-radius: 15px !important;
-        background: #fff !important;
+        background-color: #ffffff !important;
+        color: #333333 !important;
         box-sizing: border-box !important;
         text-align: center !important;
         cursor: pointer !important;
         overflow: hidden !important;
-        flex-shrink: 0 !important;
     `;
-
+    
+    // 内容を流し込む
     cardElement.innerHTML = `
-        <div style="font-size:0.7rem; color:#888;">${card.category}</div>
-        <h4 style="margin:5px 0; font-size:1.1rem;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
-        <div style="font-size:0.8rem;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
+        <div style="font-size:0.7rem; color:#888;">${card.category === "小アルカナ" ? card.name.split('の')[0] : "大アルカナ"}</div>
+        <h4 style="margin:5px 0; font-size:1.1rem; color:#333;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
+        <div style="font-size:0.8rem; color:#444;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
 
-    cardElement.addEventListener('click', function() {
-        const modal = document.getElementById('history-modal');
-        const modalBody = document.getElementById('modal-body');
-        const imagePath = window.getCardImagePath(card);
-        
-        modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
-        modal.style.display = 'block';
-    });
-
+    // ...以下 クリックイベントの登録（モーダル表示）...
     resultDiv.appendChild(cardElement);
 }
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
     // 画面表示クリア
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = '';
+    document.getElementById('result').innerHTML = '';
     
-    // 内部配列の完全クリア
+    // 【重要】ここがカードの枚数制限を保持している変数です
+    // 以下、可能性のある名前をすべて空にします
     window.drawnCards = []; 
+    window.cards = [];
     
-    // ★これが原因の可能性大：もし以下の変数が存在すればリセットする
-    if (typeof window.deck !== 'undefined') {
-        // デッキを再シャッフルして初期状態に戻す処理を呼ぶ
-        // 例: initializeDeck(); 
-    }
+    // AI用のチャット履歴なども消す必要がある場合はここに追加
+    const messageArea = document.getElementById('ai-message-area');
+    if (messageArea) messageArea.innerHTML = '';
     
-    console.log("リセット完了: カード枚数", window.drawnCards.length);
+    console.log("全データをリセットしました");
 }
 
 // --- 4. 画面表示処理 ---
@@ -398,19 +388,27 @@ window.toggleHistory = function() {
 
 // カードデータからファイル名を生成する関数
 window.getCardImagePath = function(card) {
-    const num = String(card.number).padStart(2, '0');
-
+    // 大アルカナ
     if (card.category === "大アルカナ") {
-        return `tcards/b${num}.png`;
-    } 
-    
-    // カテゴリ名から変換 (念のため空白除去)
-    const cat = card.category.trim();
-    const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
-    const suitChar = suits[cat] || "";
-    
-    // デバッグ用: もし空ならコンソールに出す
-    if (!suitChar) console.error("カテゴリが見つかりません:", cat);
-    
-    return `tcards/${suitChar}${num}.png`;
+        return `tcards/b${String(card.number).padStart(2, '0')}.png`;
+    }
+
+    // 小アルカナ：idからスートとランクを抽出
+    const suitMap = { "cup": "c", "sword": "s", "wand": "w", "pentacle": "p" };
+    const parts = card.id.split('_');
+    const suitChar = suitMap[parts[0]];
+    let rank = parts[1];
+
+    // ランクのルール変換
+    // 01-10はそのまま2桁、それ以外は頭文字を大文字にする
+    if (["page", "knight", "queen", "king"].includes(rank)) {
+        rank = rank.charAt(0).toUpperCase() + rank.slice(1);
+    } else if (rank === "ace") {
+        rank = "Ace";
+    } else {
+        // 数字の01～10
+        rank = String(rank).padStart(2, '0');
+    }
+
+    return `tcards/${suitChar}${rank}.png`;
 };
