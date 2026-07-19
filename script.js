@@ -20,24 +20,23 @@ loadCards();
 
 // --- 3. ボタンから呼ばれる入り口 ---
 function handleDraw() {
-    // 修正：デッキが空なら常にシャッフルする
-    if (remainingDeck.length === 0) {
-        remainingDeck = [...tarotDeck].sort(() => 0.5 - Math.random());
-        // 画面のクリアはここではなく、リセットボタンの責務にするのが安全です
+    // 常に window の変数を見に行くように修正
+    if (window.remainingDeck.length === 0) {
+        window.remainingDeck = [...tarotDeck].sort(() => 0.5 - Math.random());
     }
 
-    // 制限チェック
-    if (drawnCards.length >= MAX_CARDS) {
+    // ここも window.drawnCards にする
+    if (window.drawnCards.length >= MAX_CARDS) {
         alert(`カードは最大${MAX_CARDS}枚までです。`);
         return;
     }
 
-    // 1枚引く
-    if (remainingDeck.length > 0) {
-        const card = remainingDeck.pop();
+    if (window.remainingDeck.length > 0) {
+        const card = window.remainingDeck.pop();
         const drawnCard = { ...card, isReversed: Math.random() < 0.5 };
         
-        drawnCards.push(drawnCard);
+        // 配列に追加
+        window.drawnCards.push(drawnCard);
         appendSingleCard(drawnCard);
     }
 }
@@ -85,18 +84,21 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 画面表示クリア
+    // 画面クリア
     document.getElementById('result').innerHTML = '';
     
-    // 変数を初期化
-    drawnCards = []; 
-    remainingDeck = []; // これを空にすると、次の handleDraw で自動的に再生成されます
+    // 【決定版】グローバルスコープを直接指定して空にする
+    window.drawnCards = [];
+    window.remainingDeck = [];
     
-    // AI鑑定結果などのクリア
-    const aiMessage = document.getElementById('ai-message-area');
-    if (aiMessage) aiMessage.innerHTML = '';
+    // 鑑定結果エリアのクリア
+    const aiArea = document.getElementById('ai-message-area');
+    if (aiArea) aiArea.innerHTML = '';
     
-    alert("カードと文章をリセットしました。再度カードを引けます。");
+    alert("鑑定結果（カードと文章）をリセットしました");
+    
+    // デバッグログを出力
+    console.log("リセット後 - drawnCardsの長さ:", window.drawnCards.length);
 }
 
 // --- 4. 画面表示処理 ---
