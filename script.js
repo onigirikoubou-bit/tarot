@@ -20,15 +20,15 @@ loadCards();
 
 // --- 3. ボタンから呼ばれる入り口 ---
 function handleDraw() {
-    // 初回またはリセット後のカード準備
-    if (remainingDeck.length === 0 && drawnCards.length === 0) {
+    // 修正：デッキが空なら常にシャッフルする
+    if (remainingDeck.length === 0) {
         remainingDeck = [...tarotDeck].sort(() => 0.5 - Math.random());
-        document.getElementById('result').innerHTML = '';
+        // 画面のクリアはここではなく、リセットボタンの責務にするのが安全です
     }
 
     // 制限チェック
     if (drawnCards.length >= MAX_CARDS) {
-        alert(`カードは最大${MAX_CARDS}枚までです。これ以上は引けません。`);
+        alert(`カードは最大${MAX_CARDS}枚までです。`);
         return;
     }
 
@@ -37,8 +37,8 @@ function handleDraw() {
         const card = remainingDeck.pop();
         const drawnCard = { ...card, isReversed: Math.random() < 0.5 };
         
-        drawnCards.push(drawnCard); // 記録に追加
-        appendSingleCard(drawnCard); // 画面に表示
+        drawnCards.push(drawnCard);
+        appendSingleCard(drawnCard);
     }
 }
 
@@ -69,26 +69,34 @@ function appendSingleCard(card) {
         <div style="font-size:0.8rem; color:#444;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
 
-    // ...以下クリックイベント（モーダル表示）はそのまま...
+    // クリックイベントを再登録
+    cardElement.onclick = function() {
+        const modal = document.getElementById('history-modal');
+        const modalBody = document.getElementById('modal-body');
+        const imagePath = window.getCardImagePath(card);
+        
+        console.log("画像パス:", imagePath);
+        modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
+        modal.style.display = 'block';
+    };
+
     resultDiv.appendChild(cardElement);
 }
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 1. 画面上の表示を消す
+    // 画面表示クリア
     document.getElementById('result').innerHTML = '';
     
-    // 2. 3つのグローバル変数を確実に空にする
-    // windowオブジェクト経由で操作することで、参照先がずれるのを防ぎます
-    window.drawnCards = [];
-    window.remainingDeck = [];
-    // tarotDeck は読み込み済みデータなのでそのままでOK
+    // 変数を初期化
+    drawnCards = []; 
+    remainingDeck = []; // これを空にすると、次の handleDraw で自動的に再生成されます
     
-    // 3. AI鑑定の結果領域もクリア
-    const aiArea = document.getElementById('ai-message-area');
-    if (aiArea) aiArea.innerHTML = '';
+    // AI鑑定結果などのクリア
+    const aiMessage = document.getElementById('ai-message-area');
+    if (aiMessage) aiMessage.innerHTML = '';
     
-    console.log("リセット成功: drawnCards=" + drawnCards.length + ", remainingDeck=" + remainingDeck.length);
+    alert("カードと文章をリセットしました。再度カードを引けます。");
 }
 
 // --- 4. 画面表示処理 ---
