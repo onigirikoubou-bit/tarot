@@ -4,6 +4,14 @@ window.remainingDeck = [];
 window.drawnCards = [];  
 window.MAX_CARDS = 7;
 
+window.resetCards = function() {
+    console.log("！！リセット関数が呼び出されました！！");
+    document.getElementById('result').innerHTML = '';
+    window.drawnCards = [];
+    window.remainingDeck = [];
+    alert("鑑定結果をリセットしました");
+};
+
 // --- 1. カードデータの読み込み ---
 async function loadCards() {
     try {
@@ -80,24 +88,6 @@ function appendSingleCard(card) {
     };
 
     resultDiv.appendChild(cardElement);
-}
-
-// リセット用関数（必要に応じてHTMLに追加してください）
-function resetCards() {
-    console.log("！！リセット関数が呼び出されました！！"); // これを追加
-    // 画面クリア
-    document.getElementById('result').innerHTML = '';
-    
-    // 全ての参照を強制的に初期化
-    window.drawnCards = [];
-    window.remainingDeck = [];
-    
-    // 鑑定結果エリアがあれば消去
-    const aiArea = document.getElementById('ai-message-area');
-    if (aiArea) aiArea.innerHTML = '';
-    
-    console.log("リセット後の枚数:", window.drawnCards.length);
-    alert("鑑定結果（カードと文章）をリセットしました");
 }
 
 // --- 4. 画面表示処理 ---
