@@ -86,15 +86,20 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 1. 画面のクリア
-    document.getElementById('result').innerHTML = '';
+    // 画面表示クリア
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '';
     
-    // 2. カード配列のクリア（変数名はコードに合わせてください）
+    // 内部配列の完全クリア
     window.drawnCards = []; 
     
-    // 3. 枚数カウントのクリア
+    // ★これが原因の可能性大：もし以下の変数が存在すればリセットする
+    if (typeof window.deck !== 'undefined') {
+        // デッキを再シャッフルして初期状態に戻す処理を呼ぶ
+        // 例: initializeDeck(); 
+    }
     
-    document.getElementById('ai-message-area').innerHTML = '';
+    console.log("リセット完了: カード枚数", window.drawnCards.length);
 }
 
 // --- 4. 画面表示処理 ---
@@ -393,15 +398,19 @@ window.toggleHistory = function() {
 
 // カードデータからファイル名を生成する関数
 window.getCardImagePath = function(card) {
-    const num = String(card.number).padStart(2, '0'); // 1桁なら頭に0を付ける
+    const num = String(card.number).padStart(2, '0');
 
     if (card.category === "大アルカナ") {
         return `tcards/b${num}.png`;
     } 
     
-    // 小アルカナ
+    // カテゴリ名から変換 (念のため空白除去)
+    const cat = card.category.trim();
     const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
-    const suitChar = suits[card.category] || "";
+    const suitChar = suits[cat] || "";
+    
+    // デバッグ用: もし空ならコンソールに出す
+    if (!suitChar) console.error("カテゴリが見つかりません:", cat);
     
     return `tcards/${suitChar}${num}.png`;
 };
