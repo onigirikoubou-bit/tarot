@@ -54,25 +54,29 @@ function appendSingleCard(card) {
     ];
     let isNegativeDisplay = !card.isReversed ? negativeInUpright.includes(card.name) : !negativeInUpright.includes(card.name);
     
-    // --- 2. クラス名の決定 ---
-    let classes = ["card-item"];
-    if (isNegativeDisplay) classes.push("negative");
-    if (card.isReversed) classes.push("is-reversed");
-    cardElement.className = classes.join(" ");
-    
-    // --- 3. スタイルを固定（二重枠とバラバラなサイズを解消） ---
+    // --- 2. スタイル設定（！important を使用して強制適用） ---
     cardElement.style.cssText = `
-        width: 150px; min-height: 260px; margin: 10px; padding: 15px;
-        display: inline-block; vertical-align: top; 
-        border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'};
-        border-radius: 15px; background: ${card.isReversed ? '#fff0f5' : '#fff'};
-        box-sizing: border-box; text-align: center; cursor: pointer;
+        width: 150px !important; 
+        height: 260px !important; 
+        margin: 10px !important; 
+        padding: 15px !important;
+        display: inline-block !important; 
+        vertical-align: top !important; 
+        border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
+        border-radius: 15px !important; 
+        background: ${card.isReversed ? '#fff0f5' : '#fff'} !important;
+        box-sizing: border-box !important; 
+        text-align: center !important; 
+        cursor: pointer !important;
+        overflow: hidden !important;
     `;
     
-    // --- 4. 中身の作成（onclickをHTMLに書かない！） ---
+    // --- 3. カード名 ---
     const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
+    
+    // --- 4. 中身の生成 ---
     cardElement.innerHTML = `
-        <div class="card-meta" style="font-size:0.7rem; color:#888;">${card.category}</div>
+        <div style="font-size:0.7rem; color:#888;">${card.category}</div>
         <hr style="border:0; border-top:1px solid ${card.isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
         <div class="name-container">
             <h4 style="margin:5px 0; font-size:1.1rem;">${displayName}</h4>
@@ -83,11 +87,14 @@ function appendSingleCard(card) {
         </div>
     `;
     
-    // --- 5. ここでクリックイベントを安全に登録 ---
-    const imagePath = window.getCardImagePath(card);
+    // --- 5. 画像クリックイベント（ここでimagePathを生成） ---
     cardElement.addEventListener('click', function() {
-        this.style.padding = "0"; // 画像表示時に枠内の余白を消す
-        this.innerHTML = `<img src="${imagePath}" style="width:100%; height:100%; border-radius:13px; object-fit:cover;">`;
+        // パスが正しいか確認するため、一度コンソールに出力
+        const path = window.getCardImagePath(card);
+        console.log("画像パスを確認:", path);
+        
+        this.style.padding = "0"; 
+        this.innerHTML = `<img src="${path}" style="width:100%; height:100%; border-radius:13px; object-fit:cover;">`;
     });
     
     resultDiv.appendChild(cardElement);
@@ -398,14 +405,21 @@ window.toggleHistory = function() {
 
 // カードデータからファイル名を生成する関数
 window.getCardImagePath = function(card) {
+    // 念のためカード情報が出力されているか確認
+    console.log("Card object:", card); 
+
     let filename = "";
     if (card.category === "大アルカナ") {
+        // id があるか確認
         filename = `b${String(card.id).padStart(2, '0')}.png`;
     } else {
         const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
         const suitChar = suits[card.category] || "";
+        // rank があるか確認
         let rank = card.rank === "Ace" ? "Ace" : (parseInt(card.rank) >= 2 && parseInt(card.rank) <= 10 ? String(card.rank).padStart(2, '0') : card.rank);
         filename = `${suitChar}${rank}.png`;
     }
-    return `tcards/${filename}`;
+    const path = `tcards/${filename}`;
+    console.log("Generated path:", path); // コンソールでパスを確認
+    return path;
 };
