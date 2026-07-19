@@ -88,24 +88,18 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 1. 表示クリア
+    // 1. 画面の表示エリアを空にする
     document.getElementById('result').innerHTML = '';
     
-    // 2. 配列クリア（カードデータを保持している配列名に変えてください）
-    window.drawnCards = []; 
+    // 2. 内部の状態を完全に初期状態に戻す
+    drawnCards = [];          // 引いたカードの記録を消去
+    remainingDeck = [];       // 残りデッキを空にする（これによりhandleDrawが再初期化される）
     
-    // 3. 枚数カウンターのリセット（重要）
-    // もし手動でカウンター変数を作っているなら、それを明示的に0にします
-    // 例: var drawCount = 0; がコード内にある場合
-    if (typeof drawCount !== 'undefined') {
-        drawCount = 0; 
-    }
+    // 3. AIのメッセージ領域があれば消去
+    const aiArea = document.getElementById('ai-message-area');
+    if (aiArea) aiArea.innerHTML = '';
     
-    // 4. もし「制限」を html の data 属性で持っているなら
-    const resultDiv = document.getElementById('result');
-    resultDiv.dataset.count = 0;
-    
-    console.log("リセット完了しました");
+    console.log("リセット完了: カードが再引可能になりました");
 }
 
 // --- 4. 画面表示処理 ---
