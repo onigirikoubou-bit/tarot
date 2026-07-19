@@ -45,32 +45,38 @@ function handleDraw() {
 function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
-
-    // サイズを強制固定
+    
+    // 既存のCSSクラスの影響を一切受けないようにする
+    cardElement.className = ""; 
+    
     cardElement.style.cssText = `
-        width: 150px !important; min-width: 150px !important;
-        height: 260px !important; min-height: 260px !important;
-        margin: 10px !important; padding: 10px !important;
-        display: inline-block !important; vertical-align: top !important;
+        width: 150px !important;
+        height: 260px !important;
+        margin: 10px !important;
+        padding: 10px !important;
+        display: inline-block !important;
+        vertical-align: top !important;
         border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
-        border-radius: 15px !important; background: #fff !important;
-        box-sizing: border-box !important; text-align: center !important;
-        cursor: pointer !important; overflow: hidden !important;
+        border-radius: 15px !important;
+        background: #fff !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        cursor: pointer !important;
+        overflow: hidden !important;
+        flex-shrink: 0 !important;
     `;
 
     cardElement.innerHTML = `
         <div style="font-size:0.7rem; color:#888;">${card.category}</div>
-        <h4 style="margin:5px 0;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
+        <h4 style="margin:5px 0; font-size:1.1rem;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
         <div style="font-size:0.8rem;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
 
-    // クリックイベント：画像表示はモーダルのみ！
     cardElement.addEventListener('click', function() {
         const modal = document.getElementById('history-modal');
         const modalBody = document.getElementById('modal-body');
         const imagePath = window.getCardImagePath(card);
         
-        // モーダルの中身を画像にする
         modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
         modal.style.display = 'block';
     });
@@ -80,13 +86,14 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 1. 画面上の表示を消す
+    // 1. 画面のクリア
     document.getElementById('result').innerHTML = '';
     
-    // 2. 内部のカード配列を空にする（※変数名はあなたのコードに合わせてください）
+    // 2. カード配列のクリア（変数名はコードに合わせてください）
     window.drawnCards = []; 
     
-    // AI用メッセージもリセット
+    // 3. 枚数カウントのクリア
+    
     document.getElementById('ai-message-area').innerHTML = '';
 }
 
@@ -386,18 +393,15 @@ window.toggleHistory = function() {
 
 // カードデータからファイル名を生成する関数
 window.getCardImagePath = function(card) {
-    // 大アルカナ
+    const num = String(card.number).padStart(2, '0'); // 1桁なら頭に0を付ける
+
     if (card.category === "大アルカナ") {
-        return `tcards/b${String(card.number).padStart(2, '0')}.png`;
+        return `tcards/b${num}.png`;
     } 
+    
     // 小アルカナ
     const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
     const suitChar = suits[card.category] || "";
     
-    // ランク変換（Ace -> 01, 10はそのまま, その他は0 + 数字）
-    let rank = String(card.rank);
-    if (rank === "Ace") rank = "01";
-    else if (parseInt(rank) < 10) rank = "0" + rank;
-    
-    return `tcards/${suitChar}${rank}.png`;
+    return `tcards/${suitChar}${num}.png`;
 };
