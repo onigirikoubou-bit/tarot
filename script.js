@@ -45,51 +45,61 @@ function handleDraw() {
 function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
-    
-    // スタイルをCSSファイルに依存させず、全てここで完結させる
+
+    // 既存クラスを強制解除し、スタイルを完結させる
+    cardElement.className = "";
     cardElement.style.cssText = `
         width: 150px !important;
         height: 260px !important;
         display: inline-block !important;
-        vertical-align: top !important;
         margin: 10px !important;
         padding: 10px !important;
         border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
         border-radius: 15px !important;
-        background-color: #ffffff !important;
-        color: #333333 !important;
+        background-color: #fff !important;
+        color: #333 !important;
         box-sizing: border-box !important;
         text-align: center !important;
         cursor: pointer !important;
-        overflow: hidden !important;
+        vertical-align: top !important;
+        position: relative !important;
+        z-index: 10 !important;
     `;
-    
-    // 内容を流し込む
+
     cardElement.innerHTML = `
-        <div style="font-size:0.7rem; color:#888;">${card.category === "小アルカナ" ? card.name.split('の')[0] : "大アルカナ"}</div>
+        <div style="font-size:0.7rem; color:#888;">${card.category}</div>
         <h4 style="margin:5px 0; font-size:1.1rem; color:#333;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
         <div style="font-size:0.8rem; color:#444;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
 
-    // ...以下 クリックイベントの登録（モーダル表示）...
+    // クリックイベントを再登録
+    cardElement.onclick = function() {
+        const modal = document.getElementById('history-modal');
+        const modalBody = document.getElementById('modal-body');
+        const imagePath = window.getCardImagePath(card);
+        
+        console.log("画像パス:", imagePath);
+        modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
+        modal.style.display = 'block';
+    };
+
     resultDiv.appendChild(cardElement);
 }
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
-    // 画面表示クリア
+    // 1. DOMのクリア
     document.getElementById('result').innerHTML = '';
     
-    // 【重要】ここがカードの枚数制限を保持している変数です
-    // 以下、可能性のある名前をすべて空にします
-    window.drawnCards = []; 
-    window.cards = [];
+    // 2. 可能性のあるすべての変数名をリセット
+    window.drawnCards = [];
+    if (typeof window.count !== 'undefined') window.count = 0;
+    if (typeof window.drawCount !== 'undefined') window.drawCount = 0;
     
-    // AI用のチャット履歴なども消す必要がある場合はここに追加
-    const messageArea = document.getElementById('ai-message-area');
-    if (messageArea) messageArea.innerHTML = '';
+    // 3. ブラウザの再読み込みは最終手段ですが、これで強制リセットできます
+    // location.reload(); 
     
-    console.log("全データをリセットしました");
+    console.log("リセット完了");
 }
 
 // --- 4. 画面表示処理 ---
