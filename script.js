@@ -46,32 +46,41 @@ function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
     
-    // スタイルをCSSファイルに依存させず、全てここで完結させる
+    // 既存のCSSクラスの影響を一切受けないようにする
+    cardElement.className = ""; 
+    
     cardElement.style.cssText = `
         width: 150px !important;
         height: 260px !important;
-        display: inline-block !important;
-        vertical-align: top !important;
         margin: 10px !important;
         padding: 10px !important;
+        display: inline-block !important;
+        vertical-align: top !important;
         border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
         border-radius: 15px !important;
-        background-color: #ffffff !important;
-        color: #333333 !important;
+        background: #fff !important;
         box-sizing: border-box !important;
         text-align: center !important;
         cursor: pointer !important;
         overflow: hidden !important;
-    `;
-    
-    // 内容を流し込む
-    cardElement.innerHTML = `
-        <div style="font-size:0.7rem; color:#888;">${card.category === "小アルカナ" ? card.name.split('の')[0] : "大アルカナ"}</div>
-        <h4 style="margin:5px 0; font-size:1.1rem; color:#333;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
-        <div style="font-size:0.8rem; color:#444;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
+        flex-shrink: 0 !important;
     `;
 
-    // ...以下 クリックイベントの登録（モーダル表示）...
+    cardElement.innerHTML = `
+        <div style="font-size:0.7rem; color:#888;">${card.category}</div>
+        <h4 style="margin:5px 0; font-size:1.1rem;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
+        <div style="font-size:0.8rem;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
+    `;
+
+    cardElement.addEventListener('click', function() {
+        const modal = document.getElementById('history-modal');
+        const modalBody = document.getElementById('modal-body');
+        const imagePath = window.getCardImagePath(card);
+        
+        modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
+        modal.style.display = 'block';
+    });
+
     resultDiv.appendChild(cardElement);
 }
 
