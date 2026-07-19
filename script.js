@@ -1,8 +1,8 @@
-// --- グローバル変数 ---
-let tarotDeck = [];
-let remainingDeck = []; 
-let drawnCards = [];    
-const MAX_CARDS = 7; // 最大枚数の定数
+// ファイルの冒頭
+window.tarotDeck = [];
+window.remainingDeck = []; 
+window.drawnCards = [];  
+window.MAX_CARDS = 7;
 
 // --- 1. カードデータの読み込み ---
 async function loadCards() {
@@ -20,30 +20,23 @@ loadCards();
 
 // --- 3. ボタンから呼ばれる入り口 ---
 function handleDraw() {
-    // 1. 変数が未定義なら初期化する安全策
-    if (typeof remainingDeck === 'undefined') remainingDeck = [];
-    if (typeof drawnCards === 'undefined') drawnCards = [];
-
-    // 2. デッキがない、または空なら再生成
-    if (remainingDeck.length === 0) {
-        // カードデータがない場合は再読み込みを試みるなどの制御も必要ですが
-        // とりあえず tarotDeck から生成します
-        remainingDeck = [...tarotDeck].sort(() => 0.5 - Math.random());
-        // 画面のクリアは行わない（画面のクリアはリセットボタンの役割）
+    // デッキがない、または空なら再生成
+    if (window.remainingDeck.length === 0) {
+        window.remainingDeck = [...window.tarotDeck].sort(() => 0.5 - Math.random());
     }
 
-    // 3. 制限チェック
-    if (drawnCards.length >= MAX_CARDS) {
-        alert(`カードは最大${MAX_CARDS}枚までです。`);
+    // 制限チェック
+    if (window.drawnCards.length >= window.MAX_CARDS) {
+        alert(`カードは最大${window.MAX_CARDS}枚までです。`);
         return;
     }
 
-    // 4. 引く処理
-    if (remainingDeck.length > 0) {
-        const card = remainingDeck.pop();
+    // 1枚引く
+    if (window.remainingDeck.length > 0) {
+        const card = window.remainingDeck.pop();
         const drawnCard = { ...card, isReversed: Math.random() < 0.5 };
         
-        drawnCards.push(drawnCard);
+        window.drawnCards.push(drawnCard);
         appendSingleCard(drawnCard);
     }
 }
@@ -91,17 +84,19 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
+    // 画面クリア
     document.getElementById('result').innerHTML = '';
     
-    // 中身を空にする（[]）だけで、配列の存在自体は維持する
-    drawnCards = [];
-    remainingDeck = [];
-    tarotDeck = [];
+    // 全ての参照を強制的に初期化
+    window.drawnCards = [];
+    window.remainingDeck = [];
     
+    // 鑑定結果エリアがあれば消去
     const aiArea = document.getElementById('ai-message-area');
     if (aiArea) aiArea.innerHTML = '';
     
-    alert("鑑定結果をリセットしました");
+    console.log("リセット後の枚数:", window.drawnCards.length);
+    alert("鑑定結果（カードと文章）をリセットしました");
 }
 
 // --- 4. 画面表示処理 ---
@@ -165,11 +160,11 @@ window.showHistoryDetail = function(index) {
 
     // 引数なしで定義します
 async function requestAIEvaluation() {
-        const cardsToEvaluate = typeof drawnCards !== 'undefined' ? drawnCards : window.drawnCards;
-
-    // 1. カードデータを確認
-    if (!cardsToEvaluate || cardsToEvaluate.length === 0) {
-        alert("カードを引いてから押してください。");
+    // 直接 window.drawnCards を参照する
+    const cardsToEvaluate = window.drawnCards;
+    
+    if (cardsToEvaluate.length === 0) {
+        alert("鑑定するカードがありません。");
         return;
     }
 
