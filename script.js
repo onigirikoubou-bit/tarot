@@ -84,6 +84,7 @@ function appendSingleCard(card) {
 
 // リセット用関数（必要に応じてHTMLに追加してください）
 function resetCards() {
+    console.log("！！リセット関数が呼び出されました！！"); // これを追加
     // 画面クリア
     document.getElementById('result').innerHTML = '';
     
