@@ -117,24 +117,41 @@ function displayCards(selectedCards) {
         const cardElement = document.createElement('div');
         const imagePath = window.getCardImagePath(card);
         
+        // クラスを付与
         cardElement.className = `card-item ${card.isReversed ? 'negative is-reversed' : ''}`;
         
-        // ★ここが重要：データ属性にパスを保存しておく
-        cardElement.dataset.imagePath = imagePath;
+        // スタイルを強制的に統一（不揃いを防ぐため）
+        cardElement.style.cssText = `
+            width: 150px;
+            min-height: 260px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+            vertical-align: top;
+            border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'};
+            border-radius: 15px;
+            background: ${card.isReversed ? '#fff0f5' : '#fff'};
+            box-sizing: border-box;
+            cursor: pointer;
+            text-align: center;
+        `;
         
-        // ★ここが重要：onclickをHTML属性として書かず、JSでイベント登録する
+        // 画像を表示するイベントのみを登録（HTML属性は一切書かない！）
         cardElement.onclick = function() {
-            this.innerHTML = `<img src='${this.dataset.imagePath}' style='width:100%; height:100%; border-radius:15px; object-fit:cover;'>`;
+            this.style.padding = "0"; // 画像を表示する時は余白を消す
+            this.innerHTML = `<img src='${imagePath}' style='width:100%; height:100%; border-radius:13px; object-fit:cover;'>`;
         };
-        
-        cardElement.style.cursor = "pointer";
         
         const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
         
+        // 中身の構成（CSSでの装飾が効くようにクラスで管理）
         cardElement.innerHTML = `
-            <div class="card-meta">${card.category}</div>
-            <div class="name-container"><h3>${displayName}</h3></div>
-            <div class="card-advice">
+            <div class="card-meta" style="font-size:0.7rem; color:#888;">${card.category}</div>
+            <hr style="border:0; border-top:1px solid #333; margin:8px 0;">
+            <div class="name-container">
+                <h4 style="margin:5px 0; font-size:1.1rem;">${displayName}</h4>
+            </div>
+            <div class="card-advice" style="font-size:0.85rem; margin-top:10px;">
                 <p><strong>キーワード:</strong> ${card.keywords.join(', ')}</p>
                 <p>${card.isReversed ? card.reversed_meaning : card.upright_meaning}</p>
             </div>
