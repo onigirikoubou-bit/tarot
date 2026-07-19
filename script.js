@@ -71,17 +71,30 @@ function appendSingleCard(card) {
     
     cardElement.className = classes.join(" ");
     
-    // --- 4. HTML生成 ---
-    const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
-    
-    cardElement.innerHTML = `
-        <div class="card-meta">${card.category}</div>
-        <div class="name-container"><h3>${displayName}</h3></div>
-        <div class="card-advice">
+    // 1. まずファイルパスを取得する関数（前回のもの）を呼び出せるように準備
+const imagePath = window.getCardImagePath(card); 
+
+// 2. カードのベースHTML
+// onclick で自分自身(this)の中身を画像に書き換える仕組みです
+cardElement.innerHTML = `
+    <div class="card-item" onclick="this.innerHTML='<img src=\'${imagePath}\' style=\'width:100%; height:100%; object-fit:cover; border-radius:15px;\'>'"
+         style="cursor:pointer; width:150px; min-height:260px; padding:15px; border:2px solid ${card.isReversed ? '#ff69b4' : '#333'}; border-radius:15px; background:${card.isReversed ? '#fff0f5' : '#fff'}; box-sizing:border-box; text-align:center;">
+        
+        <div class="card-meta" style="font-size:0.7rem; color:#888;">${card.category}</div>
+        <hr style="border:0; border-top:1px solid ${card.isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
+        <div class="name-container">
+            <h4 style="margin:5px 0; font-size:1.1rem;">
+                <span class="${card.isReversed ? 'rotate-180' : ''}" style="display:inline-block;">
+                    ${card.isReversed ? `${card.name} (逆)` : card.name}
+                </span>
+            </h4>
+        </div>
+        <div class="card-advice" style="font-size:0.85rem; margin-top:10px;">
             <p><strong>キーワード:</strong> ${card.keywords.join(', ')}</p>
             <p>${card.isReversed ? card.reversed_meaning : card.upright_meaning}</p>
         </div>
-    `;
+    </div>
+`;
     
     resultDiv.appendChild(cardElement);
     setTimeout(() => cardElement.classList.add('appear'), 10);
@@ -358,4 +371,30 @@ window.toggleHistory = function() {
     } else {
         area.style.display = 'none';
     }
+};
+
+// カードデータからファイル名を生成する関数
+window.getCardImagePath = function(card) {
+    let filename = "";
+    
+    // 大アルカナ (例: 0番「愚者」など)
+    if (card.category === "大アルカナ") {
+        // カードオブジェクトにIDや番号が含まれている前提です。
+        // もし含まれていない場合はcard.name等から抽出するロジックが必要です。
+        filename = `b${String(card.id).padStart(2, '0')}.png`;
+    } 
+    // 小アルカナ
+    else {
+        const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
+        const suitChar = suits[card.category] || "";
+        
+        let rank = "";
+        const num = parseInt(card.rank); // 数字部分を取得
+        if (card.rank === "Ace") rank = "Ace";
+        else if (num >= 2 && num <= 10) rank = String(num).padStart(2, '0');
+        else rank = card.rank; // Page, Knight, Queen, King
+        
+        filename = `${suitChar}${rank}.png`;
+    }
+    return `tcards/${filename}`;
 };
