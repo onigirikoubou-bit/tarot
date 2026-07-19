@@ -115,28 +115,25 @@ function displayCards(selectedCards) {
     
     selectedCards.forEach((card) => {
         const cardElement = document.createElement('div');
-        
-        // 1. ファイルパスを取得
         const imagePath = window.getCardImagePath(card);
         
-        // 2. クラスの設定
         cardElement.className = `card-item ${card.isReversed ? 'negative is-reversed' : ''}`;
         
-        // 3. スタイルとクリックイベントを直接付与
-        cardElement.style.cursor = "pointer";
+        // ★ここが重要：データ属性にパスを保存しておく
+        cardElement.dataset.imagePath = imagePath;
+        
+        // ★ここが重要：onclickをHTML属性として書かず、JSでイベント登録する
         cardElement.onclick = function() {
-            this.innerHTML = `<img src='${imagePath}' style='width:100%; height:100%; border-radius:15px; object-fit:cover;'>`;
+            this.innerHTML = `<img src='${this.dataset.imagePath}' style='width:100%; height:100%; border-radius:15px; object-fit:cover;'>`;
         };
         
-        // 4. カード名
+        cardElement.style.cursor = "pointer";
+        
         const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
         
-        // 5. 中身を直接入れる（divで囲まない）
         cardElement.innerHTML = `
             <div class="card-meta">${card.category}</div>
-            <div class="name-container">
-                <h3>${displayName}</h3>
-            </div>
+            <div class="name-container"><h3>${displayName}</h3></div>
             <div class="card-advice">
                 <p><strong>キーワード:</strong> ${card.keywords.join(', ')}</p>
                 <p>${card.isReversed ? card.reversed_meaning : card.upright_meaning}</p>
