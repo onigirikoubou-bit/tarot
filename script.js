@@ -45,65 +45,49 @@ function handleDraw() {
 function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
-    
-    // --- 1. クラスを付けず、JSのスタイルのみで制御 ---
-    // classes.join(" ") ではなく、styleだけでコントロールします
-    
-    // --- 2. スタイルを強制適用 ---
+
+    // サイズを強制固定
     cardElement.style.cssText = `
-        width: 150px !important; 
-        min-width: 150px !important;
-        height: 260px !important; 
-        margin: 10px !important; 
-        padding: 15px !important;
-        display: inline-block !important; 
-        vertical-align: top !important; 
+        width: 150px !important; min-width: 150px !important;
+        height: 260px !important; min-height: 260px !important;
+        margin: 10px !important; padding: 10px !important;
+        display: inline-block !important; vertical-align: top !important;
         border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
-        border-radius: 15px !important; 
-        background: ${card.isReversed ? '#fff0f5' : '#fff'} !important;
-        box-sizing: border-box !important; 
-        text-align: center !important; 
-        cursor: pointer !important;
-        overflow: hidden !important;
+        border-radius: 15px !important; background: #fff !important;
+        box-sizing: border-box !important; text-align: center !important;
+        cursor: pointer !important; overflow: hidden !important;
     `;
-    
-    // --- 3. ファイルパスの修正（ここを調整してください！） ---
-    const getCorrectPath = (card) => {
-        // もし ID が death なら b13.png に変換するなどのロジックが必要です
-        if (card.category === "大アルカナ") {
-            const num = String(card.number).padStart(2, '0');
-            return `tcards/b${num}.png`;
-        }
-        return `tcards/b${card.id}.png`; // フォールバック
-    };
-    
-    const imagePath = getCorrectPath(card);
-    
-    // --- 4. 中身 ---
-    const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
+
     cardElement.innerHTML = `
         <div style="font-size:0.7rem; color:#888;">${card.category}</div>
-        <hr style="border:0; border-top:1px solid ${card.isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
-        <div class="name-container">
-            <h4 style="margin:5px 0; font-size:1.1rem;">${displayName}</h4>
-        </div>
-        <div style="font-size:0.85rem; margin-top:10px;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
+        <h4 style="margin:5px 0;">${card.isReversed ? card.name + ' (逆)' : card.name}</h4>
+        <div style="font-size:0.8rem;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
-    
+
+    // クリックイベント：画像表示はモーダルのみ！
     cardElement.addEventListener('click', function() {
-        this.style.padding = "0"; 
-        this.innerHTML = `<img src="${imagePath}" style="width:100%; height:100%; border-radius:13px; object-fit:cover;">`;
+        const modal = document.getElementById('history-modal');
+        const modalBody = document.getElementById('modal-body');
+        const imagePath = window.getCardImagePath(card);
+        
+        // モーダルの中身を画像にする
+        modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
+        modal.style.display = 'block';
     });
-    
+
     resultDiv.appendChild(cardElement);
 }
 
 // リセット用関数（必要に応じてHTMLに追加してください）
-function resetDeck() {
-    remainingDeck = [];
-    drawnCards = [];
+function resetCards() {
+    // 1. 画面上の表示を消す
     document.getElementById('result').innerHTML = '';
-    document.getElementById('ai-evaluation').innerHTML = '';
+    
+    // 2. 内部のカード配列を空にする（※変数名はあなたのコードに合わせてください）
+    window.drawnCards = []; 
+    
+    // AI用メッセージもリセット
+    document.getElementById('ai-message-area').innerHTML = '';
 }
 
 // --- 4. 画面表示処理 ---
@@ -402,21 +386,18 @@ window.toggleHistory = function() {
 
 // カードデータからファイル名を生成する関数
 window.getCardImagePath = function(card) {
-    // 念のためカード情報が出力されているか確認
-    console.log("Card object:", card); 
-
-    let filename = "";
+    // 大アルカナ
     if (card.category === "大アルカナ") {
-        // id があるか確認
-        filename = `b${String(card.id).padStart(2, '0')}.png`;
-    } else {
-        const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
-        const suitChar = suits[card.category] || "";
-        // rank があるか確認
-        let rank = card.rank === "Ace" ? "Ace" : (parseInt(card.rank) >= 2 && parseInt(card.rank) <= 10 ? String(card.rank).padStart(2, '0') : card.rank);
-        filename = `${suitChar}${rank}.png`;
-    }
-    const path = `tcards/${filename}`;
-    console.log("Generated path:", path); // コンソールでパスを確認
-    return path;
+        return `tcards/b${String(card.number).padStart(2, '0')}.png`;
+    } 
+    // 小アルカナ
+    const suits = { "ワンド": "w", "ソード": "s", "カップ": "c", "ペンタクル": "p" };
+    const suitChar = suits[card.category] || "";
+    
+    // ランク変換（Ace -> 01, 10はそのまま, その他は0 + 数字）
+    let rank = String(card.rank);
+    if (rank === "Ace") rank = "01";
+    else if (parseInt(rank) < 10) rank = "0" + rank;
+    
+    return `tcards/${suitChar}${rank}.png`;
 };
