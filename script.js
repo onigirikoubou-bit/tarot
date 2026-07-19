@@ -110,18 +110,28 @@ function resetDeck() {
 
 // --- 4. 画面表示処理 ---
 function displayCards(selectedCards) {
-    const displayArea = document.getElementById('card-display-area'); // 変更
+    const displayArea = document.getElementById('card-display-area');
     displayArea.innerHTML = ''; 
     
     selectedCards.forEach((card) => {
         const cardElement = document.createElement('div');
         
-        // negativeクラスとis-reversedクラスを付与
+        // 1. ファイルパスを取得
+        const imagePath = window.getCardImagePath(card);
+        
+        // 2. クラスの設定
         cardElement.className = `card-item ${card.isReversed ? 'negative is-reversed' : ''}`;
         
-        // カード名に (逆) を付けるロジックを追加
+        // 3. スタイルとクリックイベントを直接付与
+        cardElement.style.cursor = "pointer";
+        cardElement.onclick = function() {
+            this.innerHTML = `<img src='${imagePath}' style='width:100%; height:100%; border-radius:15px; object-fit:cover;'>`;
+        };
+        
+        // 4. カード名
         const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
         
+        // 5. 中身を直接入れる（divで囲まない）
         cardElement.innerHTML = `
             <div class="card-meta">${card.category}</div>
             <div class="name-container">
@@ -133,7 +143,7 @@ function displayCards(selectedCards) {
             </div>
         `;
         
-        resultDiv.appendChild(cardElement);
+        displayArea.appendChild(cardElement);
     });
 }
 
