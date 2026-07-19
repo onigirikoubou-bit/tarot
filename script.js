@@ -46,17 +46,13 @@ function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
     
-    // --- 1. 背景色の判定ロジック ---
-    const negativeInUpright = [
-        "吊るされた男", "死神", "悪魔", "塔", "月", 
-        "ソードの3", "ソードの5", "ソードの7", "ソードの9", "ソードの10", 
-        "カップの5", "カップの8", "ワンドの5", "ワンドの10", "ペンタクルの5"
-    ];
-    let isNegativeDisplay = !card.isReversed ? negativeInUpright.includes(card.name) : !negativeInUpright.includes(card.name);
+    // --- 1. クラスを付けず、JSのスタイルのみで制御 ---
+    // classes.join(" ") ではなく、styleだけでコントロールします
     
-    // --- 2. スタイル設定（！important を使用して強制適用） ---
+    // --- 2. スタイルを強制適用 ---
     cardElement.style.cssText = `
         width: 150px !important; 
+        min-width: 150px !important;
         height: 260px !important; 
         margin: 10px !important; 
         padding: 15px !important;
@@ -71,34 +67,35 @@ function appendSingleCard(card) {
         overflow: hidden !important;
     `;
     
-    // --- 3. カード名 ---
-    const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
+    // --- 3. ファイルパスの修正（ここを調整してください！） ---
+    const getCorrectPath = (card) => {
+        // もし ID が death なら b13.png に変換するなどのロジックが必要です
+        if (card.category === "大アルカナ") {
+            const num = String(card.number).padStart(2, '0');
+            return `tcards/b${num}.png`;
+        }
+        return `tcards/b${card.id}.png`; // フォールバック
+    };
     
-    // --- 4. 中身の生成 ---
+    const imagePath = getCorrectPath(card);
+    
+    // --- 4. 中身 ---
+    const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
     cardElement.innerHTML = `
         <div style="font-size:0.7rem; color:#888;">${card.category}</div>
         <hr style="border:0; border-top:1px solid ${card.isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
         <div class="name-container">
             <h4 style="margin:5px 0; font-size:1.1rem;">${displayName}</h4>
         </div>
-        <div class="card-advice" style="font-size:0.85rem; margin-top:10px;">
-            <p><strong>キーワード:</strong> ${card.keywords.join(', ')}</p>
-            <p>${card.isReversed ? card.reversed_meaning : card.upright_meaning}</p>
-        </div>
+        <div style="font-size:0.85rem; margin-top:10px;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
     `;
     
-    // --- 5. 画像クリックイベント（ここでimagePathを生成） ---
     cardElement.addEventListener('click', function() {
-        // パスが正しいか確認するため、一度コンソールに出力
-        const path = window.getCardImagePath(card);
-        console.log("画像パスを確認:", path);
-        
         this.style.padding = "0"; 
-        this.innerHTML = `<img src="${path}" style="width:100%; height:100%; border-radius:13px; object-fit:cover;">`;
+        this.innerHTML = `<img src="${imagePath}" style="width:100%; height:100%; border-radius:13px; object-fit:cover;">`;
     });
     
     resultDiv.appendChild(cardElement);
-    setTimeout(() => cardElement.classList.add('appear'), 10);
 }
 
 // リセット用関数（必要に応じてHTMLに追加してください）
