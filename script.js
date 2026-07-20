@@ -87,6 +87,7 @@ function appendSingleCard(card) {
 }
 
 // --- 4. 画面表示処理 ---
+// --- 4. 画面表示処理（履歴詳細） ---
 window.showHistoryDetail = function(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -95,11 +96,15 @@ window.showHistoryDetail = function(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
+    // 中身をクリア
     modalBody.innerHTML = '';
+    
+    // タイトルなどの追加
     const title = document.createElement('h3');
     title.innerText = `鑑定日時: ${item.date}`;
     modalBody.appendChild(title);
     
+    // カードエリアを作成
     const cardArea = document.createElement('div');
     cardArea.style.textAlign = 'center';
     
@@ -107,32 +112,67 @@ window.showHistoryDetail = function(index) {
         const cardElement = document.createElement('div');
         const imagePath = window.getCardImagePath(card);
         
-        // appendSingleCardと統一したサイズ設定
+        // カード全体のスタイル（#resultで使っている .card-item と同じ見た目にする）
+        cardElement.className = 'card-item';
         cardElement.style.cssText = `
-            width: 200px; height: 300px; margin: 5px; padding: 5px;
-            display: inline-block; vertical-align: top; border: 2px solid #333;
-            border-radius: 15px; background: #fff; box-sizing: border-box; cursor: pointer;
-            text-align: center;
+            width: 200px !important; min-width: 200px !important;
+            min-height: 300px !important; border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
+            border-radius: 15px !important; padding: 15px !important;
+            background-color: #fff !important; color: #333 !important;
+            display: inline-block !important; vertical-align: top !important;
+            margin: 10px !important; box-sizing: border-box !important;
+            text-align: center !important; cursor: pointer !important;
         `;
         
-        cardElement.addEventListener('click', function() {
-            this.innerHTML = `<img src='${imagePath}' style='width:100%; height:100%; border-radius:10px; object-fit:cover;'>`;
-        });
-        
-        const displayName = card.isReversed ? `${card.name} (逆)` : card.name;
+        const isReversed = card.isReversed;
+        const displayName = isReversed ? `${card.name} (逆)` : card.name;
+        const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
+        const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
+
+        // 初期状態のテキスト表示
         cardElement.innerHTML = `
-            <div style="font-size:0.7rem; color:#888;">${card.category}</div>
-            <h4 style="margin:5px 0;">${displayName}</h4>
-            <div style="font-size:0.8rem;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
+            <div class="card-category">${card.category}</div>
+            <hr style="border:0; border-top:1px solid ${isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
+            <div class="name-container">
+                <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
+                    <span style="display:inline-block; ${rotationStyle}">${displayName}</span>
+                </h4>
+            </div>
+            <div class="card-advice" style="font-size:0.85rem; color:#444; margin-top:10px;">${meaning}</div>
         `;
+        
+        // ★ここを追加：クリックしたら「画像」に切り替わる（もう一度押したら文字に戻るトグル式）
+        let isImageShown = false;
+        cardElement.addEventListener('click', function() {
+            if (!isImageShown) {
+                // 画像に切り替え
+                cardElement.innerHTML = `<img src="${imagePath}" style="width:100%; height:100%; border-radius:10px; object-fit:cover; min-height:270px;">`;
+                isImageShown = true;
+            } else {
+                // 元のテキスト・意味に戻す
+                cardElement.innerHTML = `
+                    <div class="card-category">${card.category}</div>
+                    <hr style="border:0; border-top:1px solid ${isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
+                    <div class="name-container">
+                        <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
+                            <span style="display:inline-block; ${rotationStyle}">${displayName}</span>
+                        </h4>
+                    </div>
+                    <div class="card-advice" style="font-size:0.85rem; color:#444; margin-top:10px;">${meaning}</div>
+                `;
+                isImageShown = false;
+            }
+        });
         
         cardArea.appendChild(cardElement);
     });
     
     modalBody.appendChild(cardArea);
     
+    // メッセージの表示
     const msgDiv = document.createElement('div');
     msgDiv.style.marginTop = "20px";
+    msgDiv.style.color = "#333";
     msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
     modalBody.appendChild(msgDiv);
     
