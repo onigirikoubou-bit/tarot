@@ -87,7 +87,6 @@ function appendSingleCard(card) {
 }
 
 // --- 4. 画面表示処理 ---
-// --- 4. 画面表示処理（履歴詳細） ---
 window.showHistoryDetail = function(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -108,14 +107,65 @@ window.showHistoryDetail = function(index) {
     const cardArea = document.createElement('div');
     cardArea.style.textAlign = 'center';
     
-    item.cards.forEach
+    item.cards.forEach(card => {
+        const cardElement = document.createElement('div');
+
+        // 履歴表示に合わせた変数定義
+        const isReversed = card.isReversed;
+        const borderColor = isReversed ? '#ff69b4' : '#333';
+        const bgColor = '#fff';
+        const displayName = isReversed ? `${card.name} (逆)` : card.name;
+        const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
+        const nameClass = isReversed ? 'rotated' : '';
+
+        // 逆位置の回転用スタイル
+        const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
+
+        // appendSingleCardと全く同じスタイル
+        cardElement.style.cssText = `
+            width: 200px; min-height: 300px; margin: 10px; padding: 15px;
+            border: 2px solid ${borderColor}; border-radius: 15px; background: ${bgColor};
+            display: inline-block; vertical-align: top; color: #333;
+            text-align: center; box-sizing: border-box; cursor: pointer;
+        `;
+
+        // appendSingleCardと全く同じ構造
+        cardElement.innerHTML = `
+            <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
+            <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
+            <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
+                <span class="${nameClass}" style="display:inline-block; ${rotationStyle}">${displayName}</span>
+            </h4>
+            <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
+        `;
+
+        // ★クリックイベント（通常の鑑定結果と同じように画像を表示）
+        cardElement.onclick = function() {
+            // もし getCardImagePath がグローバルになければ card.id から生成
+            const imagePath = typeof window.getCardImagePath === 'function' 
+                ? window.getCardImagePath(card) 
+                : `images/${card.id}.jpg`;
+            
+            // 一時的にモーダルの内容を画像に切り替える、または別のアプローチにする場合
+            // ※もしモーダル自体が「履歴詳細を表示しているモーダル」なので、
+            //  クリックした時にモーダル内を画像だけにしたい場合は以下のようにします：
+            modalBody.innerHTML = `
+                <div style="text-align: center;">
+                    <button onclick="window.showHistoryDetail(${index})" style="margin-bottom: 15px;">← 履歴詳細に戻る</button>
+                    <br>
+                    <img src="${imagePath}" style="max-width: 100%; height: auto; border-radius: 15px;">
+                </div>
+            `;
+        };
+        
+        cardArea.appendChild(cardElement);
+    });
     
     modalBody.appendChild(cardArea);
     
     // メッセージの表示
     const msgDiv = document.createElement('div');
     msgDiv.style.marginTop = "20px";
-    msgDiv.style.color = "#333";
     msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
     modalBody.appendChild(msgDiv);
     
