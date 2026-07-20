@@ -110,27 +110,38 @@ window.showHistoryDetail = function(index) {
     item.cards.forEach(card => {
         const cardElement = document.createElement('div');
 
-        // 履歴表示に合わせた変数定義
         const isReversed = card.isReversed;
         const borderColor = isReversed ? '#ff69b4' : '#333';
         const bgColor = '#fff';
         const displayName = isReversed ? `${card.name} (逆)` : card.name;
         const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
         const nameClass = isReversed ? 'rotated' : '';
-
-        // 逆位置の回転用スタイル
         const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
 
-        // appendSingleCardと全く同じスタイル
+        // 画像パスの取得（window.getCardImagePath があればそれを優先、なければ id から生成）
+        const imagePath = typeof window.getCardImagePath === 'function' 
+            ? window.getCardImagePath(card) 
+            : `images/${card.id}.jpg`;
+
+        // 共通スタイル（cursor: pointer を確実に効かせる）
         cardElement.style.cssText = `
-            width: 200px; min-height: 300px; margin: 10px; padding: 15px;
-            border: 2px solid ${borderColor}; border-radius: 15px; background: ${bgColor};
-            display: inline-block; vertical-align: top; color: #333;
-            text-align: center; box-sizing: border-box; cursor: pointer;
+            width: 200px !important;
+            min-height: 300px !important;
+            margin: 10px !important;
+            padding: 15px !important;
+            border: 2px solid ${borderColor} !important;
+            border-radius: 15px !important;
+            background: ${bgColor} !important;
+            display: inline-block !important;
+            vertical-align: top !important;
+            color: #333 !important;
+            text-align: center !important;
+            box-sizing: border-box !important;
+            cursor: pointer !important;
         `;
 
-        // appendSingleCardと全く同じ構造
-        cardElement.innerHTML = `
+        // テキスト状態のHTML
+        const textHTML = `
             <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
             <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
             <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
@@ -139,23 +150,24 @@ window.showHistoryDetail = function(index) {
             <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
         `;
 
-        // ★クリックイベント（通常の鑑定結果と同じように画像を表示）
+        // 画像状態のHTML
+        const imageHTML = `
+            <img src="${imagePath}" style="width:100%; height:270px; border-radius:10px; object-fit:cover; display:block;">
+        `;
+
+        // 初期状態はテキスト
+        cardElement.innerHTML = textHTML;
+
+        // クリックで「テキスト ⇔ 画像」を切り替えるトグル処理
+        let isShowingImage = false;
         cardElement.onclick = function() {
-            // もし getCardImagePath がグローバルになければ card.id から生成
-            const imagePath = typeof window.getCardImagePath === 'function' 
-                ? window.getCardImagePath(card) 
-                : `images/${card.id}.jpg`;
-            
-            // 一時的にモーダルの内容を画像に切り替える、または別のアプローチにする場合
-            // ※もしモーダル自体が「履歴詳細を表示しているモーダル」なので、
-            //  クリックした時にモーダル内を画像だけにしたい場合は以下のようにします：
-            modalBody.innerHTML = `
-                <div style="text-align: center;">
-                    <button onclick="window.showHistoryDetail(${index})" style="margin-bottom: 15px;">← 履歴詳細に戻る</button>
-                    <br>
-                    <img src="${imagePath}" style="max-width: 100%; height: auto; border-radius: 15px;">
-                </div>
-            `;
+            if (!isShowingImage) {
+                cardElement.innerHTML = imageHTML;
+                isShowingImage = true;
+            } else {
+                cardElement.innerHTML = textHTML;
+                isShowingImage = false;
+            }
         };
         
         cardArea.appendChild(cardElement);
@@ -207,6 +219,12 @@ async function requestAIEvaluation() {
         if (data && data.message) {
             // ★結果を表示する際は innerHTML で装飾可能に
             evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
+
+// ★ ここにスクロール処理を追加する
+aiMessageArea.scrollIntoView({ 
+    behavior: 'smooth', // スムーズにスクロールさせる
+    block: 'start'      // 要素の先頭が画面の上部にくるようにする
+});
 
             // 結果を保存する関数
 function saveReadingToHistory(cards, message) {
@@ -341,8 +359,6 @@ window.resetCards = function() {
     const aiArea = document.getElementById('ai-message-area');
     if (aiArea) aiArea.innerHTML = '';
 
-    console.log("リセット完了。現在の枚数:", window.drawnCards.length);
-    alert("鑑定結果（カードと文章）をリセットしました");
 };
 
 // 4. モーダルを閉じる関数（重複を解消して一つにまとめました）
