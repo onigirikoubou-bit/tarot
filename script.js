@@ -221,7 +221,7 @@ async function requestAIEvaluation() {
             evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
 
 // ★ ここにスクロール処理を追加する
-aiMessageArea.scrollIntoView({ 
+evaluationDiv.scrollIntoView({ 
     behavior: 'smooth', // スムーズにスクロールさせる
     block: 'start'      // 要素の先頭が画面の上部にくるようにする
 });
@@ -257,49 +257,6 @@ if (data && data.message) {
 }
 
 // --- 履歴の詳細を表示する関数（モーダルを開く） ---
-function showHistoryDetail(index) {
-    const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
-    const item = history[index];
-    
-    if (!item) return;
-    
-    const modal = document.getElementById('history-modal');
-    const modalBody = document.getElementById('modal-body');
-    
-    // モーダルの中身を作成
-    // カード情報を再現（鑑定結果画面のカード表示ロジックを流用）
-    const cardsHtml = item.cards.map(card => {
-    const isReversed = card.isReversed;
-    const displayName = isReversed ? `${card.name} (逆)` : card.name;
-    const nameClass = isReversed ? 'rotate-180' : '';
-    const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
-
-    // ★修正ポイント：逆位置なら背景を薄いピンク(#fff0f5)にし、枠線を赤系にする
-    const bgColor = isReversed ? '#fff0f5' : '#fff';
-    const borderColor = isReversed ? '#ff69b4' : '#333';
-
-    return `
-        <div class="card-item" style="width:160px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center;">
-            <!-- ① 大小アルカナ -->
-            <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
-            
-            <!-- ② 線の仕切り -->
-            <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
-            
-            <!-- ③ カード名 (回転あり) -->
-            <h4 style="margin:5px 0; color:#333; font-size:1.1rem;">
-                <span class="${nameClass}" style="display:inline-block;">${displayName}</span>
-            </h4>
-            
-            <!-- ④ カードの性格（意味） -->
-            <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
-        </div>
-    `;
-}).join('');
-}
-
-// 3. モーダル表示関数
-// --- 履歴詳細：縦長カード＆ピンク色反映 ---
 window.showHistoryDetail = function(index) {
     const history = JSON.parse(localStorage.getItem('tarotHistory') || '[]');
     const item = history[index];
@@ -308,36 +265,115 @@ window.showHistoryDetail = function(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
-    const cardsHtml = item.cards.map(card => {
-        const isReversed = card.isReversed;
-        const displayName = isReversed ? `${card.name} (逆)` : card.name;
-        const nameClass = isReversed ? 'rotate-180' : '';
-        const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
-
-        const bgColor = isReversed ? '#fff0f5' : '#fff';
-        const borderColor = isReversed ? '#ff69b4' : '#333';
-
-        return `
-            <div style="width:200px; min-height:300px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center; box-sizing:border-box;">
-                <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
-                <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
-                <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
-                    <span class="${nameClass}" style="display:inline-block;">${displayName}</span>
-                </h4>
-                <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
-            </div>
-        `;
-    }).join('');
-
-    // ★ここで回答文章を表示するように修正
-    modalBody.innerHTML = `
-        <h3 style="color:#333; text-align:center;">鑑定日時: ${item.date}</h3>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; margin:20px 0;">${cardsHtml}</div>
-        <hr>
-        <div style="color:#333; line-height:1.8; margin-top:10px; font-size:15px; text-align:left;">
-            ${item.message ? item.message.replace(/\n/g, '<br>') : 'メッセージなし'}
-        </div>
+    // 中身をクリア
+    modalBody.innerHTML = '';
+    
+    // タイトルなどの追加
+    const title = document.createElement('h3');
+    title.innerText = `鑑定日時: ${item.date}`;
+    modalBody.appendChild(title);
+    
+    // ★一括で画像表示を切り替えるためのボタンを追加
+    const toggleButton = document.createElement('button');
+    toggleButton.innerText = '🖼️ すべてのカードを画像に切り替える';
+    toggleButton.style.cssText = `
+        display: block; margin: 15px auto; padding: 10px 20px;
+        font-size: 1rem; cursor: pointer; border-radius: 8px;
+        background-color: #3498db; color: #white; border: none;
     `;
+    modalBody.appendChild(toggleButton);
+
+    // カードエリアを作成
+    const cardArea = document.createElement('div');
+    cardArea.style.textAlign = 'center';
+    
+    // 各カードのHTML要素を保持する配列
+    const cardElements = [];
+
+    item.cards.forEach(card => {
+        const cardElement = document.createElement('div');
+
+        const isReversed = card.isReversed;
+        const borderColor = isReversed ? '#ff69b4' : '#333';
+        const bgColor = '#fff';
+        const displayName = isReversed ? `${card.name} (逆)` : card.name;
+        const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
+        const nameClass = isReversed ? 'rotated' : '';
+        const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
+
+        // 画像パスの取得
+        const imagePath = typeof window.getCardImagePath === 'function' 
+            ? window.getCardImagePath(card) 
+            : `images/${card.id}.jpg`;
+
+        // 共通スタイル（カード自体の形はそのまま維持）
+        cardElement.style.cssText = `
+            width: 200px !important;
+            min-height: 300px !important;
+            margin: 10px !important;
+            padding: 15px !important;
+            border: 2px solid ${borderColor} !important;
+            border-radius: 15px !important;
+            background: ${bgColor} !important;
+            display: inline-block !important;
+            vertical-align: top !important;
+            color: #333 !important;
+            text-align: center !important;
+            box-sizing: border-box !important;
+        `;
+
+        // テキスト状態のHTML
+        const textHTML = `
+            <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
+            <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
+            <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
+                <span class="${nameClass}" style="display:inline-block; ${rotationStyle}">${displayName}</span>
+            </h4>
+            <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
+        `;
+
+        // 画像状態のHTML
+        const imageHTML = `
+            <img src="${imagePath}" style="width:100%; height:270px; border-radius:10px; object-fit:cover; display:block;">
+        `;
+
+        // 初期状態はテキストをセット
+        cardElement.innerHTML = textHTML;
+        
+        // 後から一括切り替えできるようにデータを覚えさせておく
+        cardElement.dataset.isImage = "false";
+        cardElement.dataset.textHTML = textHTML;
+        cardElement.dataset.imageHTML = imageHTML;
+
+        cardElements.push(cardElement);
+        cardArea.appendChild(cardElement);
+    });
+    
+    modalBody.appendChild(cardArea);
+
+    // ★ボタンを押したときの処理（すべてのカードの表示をテキスト ⇔ 画像で一斉に切り替える）
+    let isAllImages = false;
+    toggleButton.onclick = function() {
+        isAllImages = !isAllImages;
+        cardElements.forEach(el => {
+            if (isAllImages) {
+                el.innerHTML = el.dataset.imageHTML;
+                toggleButton.innerText = '📝 すべてのカードをテキストに戻す';
+                toggleButton.style.backgroundColor = '#e67e22'; // 色を変えて分かりやすくする
+            } else {
+                el.innerHTML = el.dataset.textHTML;
+                toggleButton.innerText = '🖼️ すべてのカードを画像に切り替える';
+                toggleButton.style.backgroundColor = '#3498db';
+            }
+        });
+    };
+    
+    // メッセージの表示
+    const msgDiv = document.createElement('div');
+    msgDiv.style.marginTop = "20px";
+    msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
+    modalBody.appendChild(msgDiv);
+    
     modal.style.display = 'block';
 };
 
