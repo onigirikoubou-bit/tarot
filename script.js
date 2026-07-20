@@ -335,8 +335,9 @@ window.showHistoryDetail = function(index) {
         `;
 
         // ★画像状態のHTML（カード枠の余白 padding を相殺して、枠の端ギリギリまで大きく表示）
+        // ★画像を少し大きめにズーム（scale）させて中央から切り出し、余白を隠す
         const imageHTML = `
-            <img src="${imagePath}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 13px; display: block;">
+            <img src="${imagePath}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.2); transform-origin: center center; border-radius: 13px; display: block;">
         `;
 
         cardElement.innerHTML = textHTML;
@@ -366,7 +367,7 @@ window.showHistoryDetail = function(index) {
                 // テキストに戻す時は元のパディング（15px）を復元
                 el.style.padding = '15px';
                 el.innerHTML = el.dataset.textHTML;
-                toggleButton.innerText = '🖼️ すべてのカードを画像に切り替える';
+                toggleButton.innerText = '🖼️ 画像を表示';
                 toggleButton.style.backgroundColor = '#3498db';
             }
         });
