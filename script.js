@@ -265,21 +265,23 @@ window.showHistoryDetail = function(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
-    // 中身をクリア
+    // 中身をクリア ＋ 全体の文字色をはっきりした黒（#222）に指定
     modalBody.innerHTML = '';
+    modalBody.style.color = '#222222';
     
-    // タイトルなどの追加
+    // タイトル（日付など）の文字色を黒に明示
     const title = document.createElement('h3');
     title.innerText = `鑑定日時: ${item.date}`;
+    title.style.color = '#222222';
     modalBody.appendChild(title);
     
-    // ★一括で画像表示を切り替えるためのボタンを追加
+    // 一括で画像表示を切り替えるためのボタン
     const toggleButton = document.createElement('button');
-    toggleButton.innerText = '🖼️ すべてのカードを画像に切り替える';
+    toggleButton.innerText = '🖼️ 画像を表示';
     toggleButton.style.cssText = `
         display: block; margin: 15px auto; padding: 10px 20px;
         font-size: 1rem; cursor: pointer; border-radius: 8px;
-        background-color: #3498db; color: #white; border: none;
+        background-color: #3498db; color: #fff; border: none;
     `;
     modalBody.appendChild(toggleButton);
 
@@ -287,7 +289,6 @@ window.showHistoryDetail = function(index) {
     const cardArea = document.createElement('div');
     cardArea.style.textAlign = 'center';
     
-    // 各カードのHTML要素を保持する配列
     const cardElements = [];
 
     item.cards.forEach(card => {
@@ -301,12 +302,11 @@ window.showHistoryDetail = function(index) {
         const nameClass = isReversed ? 'rotated' : '';
         const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
 
-        // 画像パスの取得
         const imagePath = typeof window.getCardImagePath === 'function' 
             ? window.getCardImagePath(card) 
             : `images/${card.id}.jpg`;
 
-        // 共通スタイル（カード自体の形はそのまま維持）
+        // カード自体のスタイル（枠サイズは維持しつつ、画像表示時はパディングを0にしてギリギリまで広げる）
         cardElement.style.cssText = `
             width: 200px !important;
             min-height: 300px !important;
@@ -317,30 +317,30 @@ window.showHistoryDetail = function(index) {
             background: ${bgColor} !important;
             display: inline-block !important;
             vertical-align: top !important;
-            color: #333 !important;
+            color: #222222 !important;
             text-align: center !important;
             box-sizing: border-box !important;
+            position: relative;
+            overflow: hidden;
         `;
 
-        // テキスト状態のHTML
+        // テキスト状態のHTML（文字色は濃い黒に統一）
         const textHTML = `
-            <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
+            <p style="font-size:0.7rem; color:#555555; margin:0;">${card.category}</p>
             <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
-            <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
+            <h4 style="margin:5px 0; color:#222222; font-size:1.1rem; min-height:3em;">
                 <span class="${nameClass}" style="display:inline-block; ${rotationStyle}">${displayName}</span>
             </h4>
-            <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
+            <p style="font-size:0.85rem; color:#333333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
         `;
 
-        // 画像状態のHTML
+        // ★画像状態のHTML（カード枠の余白 padding を相殺して、枠の端ギリギリまで大きく表示）
         const imageHTML = `
-            <img src="${imagePath}" style="width:100%; height:270px; border-radius:10px; object-fit:cover; display:block;">
+            <img src="${imagePath}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 13px; display: block;">
         `;
 
-        // 初期状態はテキストをセット
         cardElement.innerHTML = textHTML;
         
-        // 後から一括切り替えできるようにデータを覚えさせておく
         cardElement.dataset.isImage = "false";
         cardElement.dataset.textHTML = textHTML;
         cardElement.dataset.imageHTML = imageHTML;
@@ -351,16 +351,20 @@ window.showHistoryDetail = function(index) {
     
     modalBody.appendChild(cardArea);
 
-    // ★ボタンを押したときの処理（すべてのカードの表示をテキスト ⇔ 画像で一斉に切り替える）
+    // ボタンを押したときの切り替え処理
     let isAllImages = false;
     toggleButton.onclick = function() {
         isAllImages = !isAllImages;
         cardElements.forEach(el => {
             if (isAllImages) {
+                // 画像にする時はカード側の余白 padding をなくして画像を端までフィットさせる
+                el.style.padding = '0';
                 el.innerHTML = el.dataset.imageHTML;
-                toggleButton.innerText = '📝 すべてのカードをテキストに戻す';
-                toggleButton.style.backgroundColor = '#e67e22'; // 色を変えて分かりやすくする
+                toggleButton.innerText = '📝 テキスト表示';
+                toggleButton.style.backgroundColor = '#e67e22';
             } else {
+                // テキストに戻す時は元のパディング（15px）を復元
+                el.style.padding = '15px';
                 el.innerHTML = el.dataset.textHTML;
                 toggleButton.innerText = '🖼️ すべてのカードを画像に切り替える';
                 toggleButton.style.backgroundColor = '#3498db';
@@ -368,9 +372,9 @@ window.showHistoryDetail = function(index) {
         });
     };
     
-    // メッセージの表示
+    // AIメッセージエリア（文字色をしっかりした黒・濃いグレーに指定）
     const msgDiv = document.createElement('div');
-    msgDiv.style.marginTop = "20px";
+    msgDiv.style.cssText = "margin-top: 20px; color: #222222 !important; line-height: 1.6;";
     msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
     modalBody.appendChild(msgDiv);
     
