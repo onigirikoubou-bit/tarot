@@ -1,4 +1,6 @@
-/* 全体設定 */
+/* ==========================================
+   1. 全体・レイアウト設定
+   ========================================== */
 body {
     font-family: sans-serif;
     background-color: #2c3e50;
@@ -11,96 +13,74 @@ body {
     padding-top: 50px;
 }
 
-/* タイトルをセンタリング */
 h1 {
     text-align: center;
     margin-bottom: 20px;
 }
 
-/* スマホ向けのボタン基本設定 */
+/* ==========================================
+   2. ボタン・コンテナ設定
+   ========================================== */
 button {
-    /* 文字を大きく見やすく */
     font-size: 1.2rem;
-    
-    /* ボタンの内側上下左右に余白を設けて、タップ領域を大きくする */
     padding: 15px 30px;
-    
-    /* ボタン同士の間隔（上下にも少し持たせて、改行されても重ならないようにする） */
     margin: 10px 5px;
-    
-    /* (お好みで) 角を丸くする */
     border-radius: 8px;
-    
-    /* (お好みで) 枠線と背景色を整える */
     border: 1px solid #333;
     background-color: #f0f0f0;
     cursor: pointer;
-    
-    /* タップした時の反応を良くする（長押しメニューなどを抑制） */
     touch-action: manipulation;
 }
 
-/* ボタンを囲むコンテナの設定（中央寄せ用） */
 .button-container {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* ボタンが多い場合、画面幅に合わせて折り返すようにする */
+    flex-wrap: wrap;
     padding: 10px;
 }
 
-/* コンテナ設定 */
-/* style.css に追加 */
 #result {
-    max-width: 600px;    /* 最大幅を600pxに制限 */
-    margin: 20px auto;   /* 中央寄せ */
+    max-width: 600px;
+    margin: 20px auto;
     padding: 20px;
-    line-height: 1.6;    /* 行間を広げて読みやすく */
-    background: #f9f9f9; /* 薄い背景色で区別 */
-    border-radius: 8px;  /* 角を丸く */
+    line-height: 1.6;
+    background: #f9f9f9;
+    border-radius: 8px;
 }
 
-/* カードが並ぶエリア（必要に応じて調整） */
 #card-display-area {
     display: flex;
     justify-content: center;
     gap: 10px;
 }
 
-/* カード全体のスタイル */
+/* ==========================================
+   3. カードアイテムの統合定義（幅・アニメーション等）
+   ========================================== */
 .card-item {
-    width: 200px;
-    min-height: 300px;
+    /* 画面幅が狭いスマホでは、画面幅の約45%に設定して2枚並べる（あるいは1枚なら90%にする） */
+    width: 45vw !important; 
+    max-width: 200px !important; /* 最大幅は維持 */
+    min-height: 280px !important;
     border: 2px solid #333;
-    border-radius: 15px;
-    padding: 15px;
+    border-radius: 12px;
+    padding: 10px; /* 余白も少し詰める */
     background-color: #fff;
-    display: flex;
-    flex-direction: column; /* 縦並びを維持 */
-    margin: 10px;
+    color: #333;
+    display: inline-block;
+    vertical-align: top;
+    margin: 5px; /* マージンを小さくして横幅を稼ぐ */
+    box-sizing: border-box;
+    text-align: center;
+    transition: transform 0.6s ease-in-out;
 }
 
-/* カード内のタイトル（h3）の設定 */
-.card-item h3 {
-    color: #2c3e50; /* 濃い青色で文字を表示 */
-    margin: 5px 0;
-    font-size: 1.3rem;
-}
-
-/* 説明文エリア：明示的に表示させる */
-.card-advice {
-    display: block !important; /* 強制表示 */
-    text-align: left !important;
-    font-size: 14px;
-    color: #444;
-    margin-top: 10px;
-    flex-grow: 1; /* 枠内でスペースを確保 */
-}
-
+/* カード内要素 */
 .card-category {
-    font-size: 0.75rem;      /* 小さめの文字サイズ */
-    color: #999;             /* 薄いグレー */
-    letter-spacing: 0.1em;   /* 少し字間を空けて上品に */
-    margin-bottom: 5px;      /* タイトルとの隙間 */
+    font-size: 0.75rem;
+    color: #999;
+    letter-spacing: 0.1em;
+    margin-bottom: 5px;
     text-transform: uppercase;
 }
 
@@ -110,110 +90,88 @@ button {
     border-bottom: 1px solid #ddd;
     margin-bottom: 10px;
     padding-bottom: 5px;
-}
-
-/* カード全体は回転させない */
-.card-item {
-    width: 200px;
-    border: 2px solid #333;
-    border-radius: 15px;
-    padding: 15px;
-    margin: 10px;
-    background-color: #fff;
-    display: inline-block;
-    vertical-align: top;
-    align-items: center;
+    text-align: center;
 }
 
 .name-container {
     text-align: center;
-    margin: 10px 0; /* 上下の余白を確保 */
-    flex-grow: 1; /* 名前エリアを広げてバランスを取る */
+    margin: 10px 0;
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* スマホ向けの特別な設定（画面幅が600px以下の場合） */
-@media screen and (max-width: 600px) {
-    .button-container {
-        padding: 20px 40px !important; /* ボタンの内部余白を広げて大きくする */
-        font-size: 18px !important;    /* 文字も大きくして押しやすくする */
-        width: 90%;                    /* 横幅を画面幅に合わせる */
-        max-width: 300px;              /* ただし大きすぎないように制限 */
-        margin: 10px auto;             /* 上下に余白を作って独立させる */
-        display: block;                /* 縦並びにし、押しやすくする */
-    }
+.card-item h3 {
+    color: #2c3e50;
+    margin: 5px 0;
+    font-size: 1.3rem;
 }
 
-/* カードの基本設定（回転アニメーションを追加） */
-.card-item {
-    transition: transform 0.6s ease-in-out; /* 0.6秒かけて滑らかに回る */
-    transform-style: preserve-3d;
-    cursor: pointer;
+.card-advice {
+    display: block !important;
+    text-align: center !important;
+    font-size: 14px;
+    color: #444;
+    margin-top: 10px;
+    flex-grow: 1;
 }
 
-/* カードを引いた瞬間のアニメーション */
+/* カードアニメーション・状態 */
 .card-item.appear {
     animation: flipIn 0.8s ease-out forwards;
 }
 
 @keyframes flipIn {
     from {
-        transform: scale(0.8) rotateY(-90deg); /* 少し小さく、横向きから開始 */
+        transform: scale(0.8) rotateY(-90deg);
         opacity: 0;
     }
     to {
-        transform: scale(1) rotateY(0deg);     /* 通常サイズへ */
+        transform: scale(1) rotateY(0deg);
         opacity: 1;
     }
 }
 
-/* CSSファイルの末尾にコピペ */
 .card-item.negative {
     background-color: #ffcccc !important;
     border: 2px solid #ff9999 !important;
     box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
 }
 
-/* 名前エリアだけを180度回転させる（修正） */
 .card-item.is-reversed .name-container {
     transform: rotate(180deg);
 }
 
-/* その他の要素はそのまま */
-.card-meta, .card-advice {
-    text-align: center;
+.rotate-180 {
+    transform: rotate(180deg);
+    display: inline-block;
 }
 
+/* ==========================================
+   4. AIメッセージ・履歴・モーダル設定
+   ========================================== */
 #ai-message-area {
-    /* 幅を制限して読みやすくします */
-    max-width: 600px; /* ★ここが重要：好みの幅（600px〜800pxが読みやすいです） */
-    width: 90%;       /* スマホなどの狭い画面では画面幅の90%を使います */
-    margin: 20px auto; /* 左右中央寄せ */
-    
-    /* 文字色と背景色 */
+    max-width: 600px;
+    width: 90%;
+    margin: 20px auto;
     color: #333333;
     background-color: #ffffff;
-    
-    /* 読みやすくするための余白と装飾 */
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* 少し柔らかい影 */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     line-height: 1.8;
     font-size: 21px;
-    text-align: left; /* 左寄せの方が文章は読みやすいです */
+    text-align: left;
 }
 
-/* 見出しのスタイル調整 */
 #ai-message-area h3 {
     margin-top: 0;
-    color: #2c3e50; /* 少し落ち着いた濃い色 */
+    color: #2c3e50;
     border-bottom: 2px solid #eee;
     padding-bottom: 10px;
 }
 
-/* --- 履歴エリア全体のスタイル（幅を鑑定結果に合わせる） --- */
 #history-area {
     display: block !important;
     visibility: visible !important;
@@ -221,69 +179,71 @@ button {
     max-width: 600px !important;
     margin: 20px auto !important;
     padding: 20px;
-    background-color: #ffffff !important; /* ★背景を白に */
-    border-radius: 12px;                  /* ★角を丸く */
-    color: #333333 !important;            /* ★文字を黒に */
+    background-color: #ffffff !important;
+    border-radius: 12px;
+    color: #333333 !important;
     position: relative !important;
     z-index: 999;
 }
 
 #history-area h2 {
     text-align: center;
-    color: #333333 !important; /* ★ここも明示 */
+    color: #333333 !important;
 }
 
-/* --- 個々の履歴アイテムのスタイル（読みやすく） --- */
 .history-item {
     background: #fff;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #e0e0e0;
-    cursor: pointer; /* クリックできることを示す */
+    cursor: pointer;
     transition: background 0.2s;
 }
 
 .history-item:hover {
-    background-color: #f0f0f0; /* ホバー時に少し色を変える */
+    background-color: #f0f0f0;
 }
 
 .history-item p {
     margin: 5px 0;
-    color: #555; /* 読みやすい濃いグレー */
+    color: #555;
     font-size: 14px;
 }
 
-/* 履歴のメッセージ冒頭だけ表示する部分 */
 .history-snippet {
     font-weight: bold;
     color: #333;
 }
 
-/* --- モーダルウィンドウ（詳細表示）のスタイル --- */
+#history-list, #history-list p, #history-list strong {
+    color: #333333 !important; 
+    opacity: 1 !important;
+}
+
+/* モーダル */
 .modal {
-    position: fixed; /* 画面に固定 */
-    z-index: 1000; /* 最前面に */
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* スクロール可能に */
-    background-color: rgba(0,0,0,0.5); /* 半透明の黒背景 */
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 10% auto; /* 画面の中央に配置 */
+    margin: 10% auto;
     padding: 30px;
     border-radius: 12px;
-    max-width: 700px; /* モーダルの幅 */
+    max-width: 700px;
     width: 80%;
     position: relative;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-/* 閉じるボタン (×) */
 .close-modal {
     color: #aaa;
     position: absolute;
@@ -301,7 +261,6 @@ button {
     cursor: pointer;
 }
 
-/* モーダル内のカード表示エリア（鑑定結果のスタイルを流用） */
 #modal-cards-area {
     display: flex;
     flex-wrap: wrap;
@@ -315,13 +274,13 @@ button {
     color: #333;
 }
 
-/* #history-list 内の文字を強制的に濃くする */
-#history-list, #history-list p, #history-list strong {
-    color: #333333 !important; 
-    opacity: 1 !important;
-}
-
-.rotate-180 {
-    transform: rotate(180deg);
-    display: inline-block;
+/* ==========================================
+   5. レスポンシブ (スマホ向け)
+   ========================================== */
+@media screen and (max-width: 480px) {
+    .card-item {
+        width: 46vw !important; /* 画面のほぼ半分を占有 */
+        margin: 2px !important;
+        padding: 5px !important;
+    }
 }

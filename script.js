@@ -45,36 +45,40 @@ function appendSingleCard(card) {
     const resultDiv = document.getElementById('result');
     const cardElement = document.createElement('div');
 
-    // 逆位置なら回転させるスタイル
-    const rotationStyle = card.isReversed ? 'transform: rotate(180deg); display: inline-block;' : '';
+    // 履歴表示に合わせた変数定義
+    const isReversed = card.isReversed;
+    const borderColor = isReversed ? '#ff69b4' : '#333';
+    const bgColor = '#fff';
+    const displayName = isReversed ? `${card.name} (逆)` : card.name;
+    const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
+    const nameClass = isReversed ? 'rotated' : ''; // 必要に応じてクラスを付与
 
+    // 逆位置の回転用スタイル
+    const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
+
+    // 履歴表示と完全に同一のスタイル
     cardElement.style.cssText = `
-        width: 200px !important; min-width: 200px !important;
-        height: 300px !important; min-height: 300px !important;
-        display: inline-block !important; margin: 5px !important;
-        padding: 5px !important; border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
-        border-radius: 15px !important; background-color: #fff !important;
-        color: #333 !important; box-sizing: border-box !important;
-        text-align: center !important; cursor: pointer !important;
-        vertical-align: top !important; position: relative !important;
-        flex: 0 0 150px !important;
+        width: 200px; min-height: 300px; margin: 10px; padding: 15px;
+        border: 2px solid ${borderColor}; border-radius: 15px; background: ${bgColor};
+        display: inline-block; vertical-align: top; color: #333;
+        text-align: center; box-sizing: border-box; cursor: pointer;
     `;
 
+    // 履歴表示と完全に同一の構造
     cardElement.innerHTML = `
-        <div style="font-size:0.7rem; color:#888;">${card.category}</div>
-        <h4 style="margin:5px 0; font-size:1.1rem; color:#333; ${rotationStyle}">
-            ${card.isReversed ? card.name + ' (逆)' : card.name}
+        <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
+        <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
+        <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
+            <span class="${nameClass}" style="display:inline-block; ${rotationStyle}">${displayName}</span>
         </h4>
-        <div style="font-size:0.8rem; color:#444;">${card.isReversed ? card.reversed_meaning : card.upright_meaning}</div>
+        <p style="font-size:0.85rem; color:#333; margin:10px 0 0 0; line-height:1.4;">${meaning}</p>
     `;
 
-    // クリックイベントを再登録
+    // クリックイベント（画像表示）
     cardElement.onclick = function() {
         const modal = document.getElementById('history-modal');
         const modalBody = document.getElementById('modal-body');
         const imagePath = window.getCardImagePath(card);
-        
-        console.log("画像パス:", imagePath);
         modalBody.innerHTML = `<img src="${imagePath}" style="width:100%; border-radius:15px;">`;
         modal.style.display = 'block';
     };
@@ -91,15 +95,11 @@ window.showHistoryDetail = function(index) {
     const modal = document.getElementById('history-modal');
     const modalBody = document.getElementById('modal-body');
     
-    // 中身をクリア
     modalBody.innerHTML = '';
-    
-    // タイトルなどの追加
     const title = document.createElement('h3');
     title.innerText = `鑑定日時: ${item.date}`;
     modalBody.appendChild(title);
     
-    // カードエリアを作成
     const cardArea = document.createElement('div');
     cardArea.style.textAlign = 'center';
     
@@ -107,14 +107,14 @@ window.showHistoryDetail = function(index) {
         const cardElement = document.createElement('div');
         const imagePath = window.getCardImagePath(card);
         
-        // 共通スタイル設定
-         = `
-            width: 150px; min-height: 260px; margin: 10px; padding: 10px;
+        // appendSingleCardと統一したサイズ設定
+        cardElement.style.cssText = `
+            width: 200px; height: 300px; margin: 5px; padding: 5px;
             display: inline-block; vertical-align: top; border: 2px solid #333;
             border-radius: 15px; background: #fff; box-sizing: border-box; cursor: pointer;
+            text-align: center;
         `;
         
-        // クリックで画像へ切り替え
         cardElement.addEventListener('click', function() {
             this.innerHTML = `<img src='${imagePath}' style='width:100%; height:100%; border-radius:10px; object-fit:cover;'>`;
         });
@@ -131,7 +131,6 @@ window.showHistoryDetail = function(index) {
     
     modalBody.appendChild(cardArea);
     
-    // メッセージの表示
     const msgDiv = document.createElement('div');
     msgDiv.style.marginTop = "20px";
     msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
@@ -139,7 +138,6 @@ window.showHistoryDetail = function(index) {
     
     modal.style.display = 'block';
 };
-
 
     // 引数なしで定義します
 async function requestAIEvaluation() {
@@ -269,7 +267,7 @@ window.showHistoryDetail = function(index) {
         const borderColor = isReversed ? '#ff69b4' : '#333';
 
         return `
-            <div style="width:150px; min-height:260px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center; box-sizing:border-box;">
+            <div style="width:200px; min-height:300px; margin:10px; padding:15px; border:2px solid ${borderColor}; border-radius:15px; background:${bgColor}; display:inline-block; vertical-align:top; color:#333; text-align:center; box-sizing:border-box;">
                 <p style="font-size:0.7rem; color:#888; margin:0;">${card.category}</p>
                 <hr style="border:0; border-top:1px solid ${borderColor}; margin:8px 0;">
                 <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
