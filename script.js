@@ -4,14 +4,6 @@ window.remainingDeck = [];
 window.drawnCards = [];  
 window.MAX_CARDS = 7;
 
-window.resetCards = function() {
-    console.log("！！リセット関数が呼び出されました！！");
-    document.getElementById('result').innerHTML = '';
-    window.drawnCards = [];
-    window.remainingDeck = [];
-    alert("鑑定結果をリセットしました");
-};
-
 // --- 1. カードデータの読み込み ---
 async function loadCards() {
     try {
@@ -57,10 +49,10 @@ function appendSingleCard(card) {
     const rotationStyle = card.isReversed ? 'transform: rotate(180deg); display: inline-block;' : '';
 
     cardElement.style.cssText = `
-        width: 150px !important; min-width: 150px !important;
-        height: 260px !important; min-height: 260px !important;
-        display: inline-block !important; margin: 10px !important;
-        padding: 10px !important; border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
+        width: 200px !important; min-width: 200px !important;
+        height: 300px !important; min-height: 300px !important;
+        display: inline-block !important; margin: 5px !important;
+        padding: 5px !important; border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
         border-radius: 15px !important; background-color: #fff !important;
         color: #333 !important; box-sizing: border-box !important;
         text-align: center !important; cursor: pointer !important;
@@ -116,7 +108,7 @@ window.showHistoryDetail = function(index) {
         const imagePath = window.getCardImagePath(card);
         
         // 共通スタイル設定
-        cardElement.style.cssText = `
+         = `
             width: 150px; min-height: 260px; margin: 10px; padding: 10px;
             display: inline-block; vertical-align: top; border: 2px solid #333;
             border-radius: 15px; background: #fff; box-sizing: border-box; cursor: pointer;
@@ -302,14 +294,24 @@ window.showHistoryDetail = function(index) {
 
 // --- カードリセット機能（カードを表示しているエリアのIDを'card-area'と想定） ---
 window.resetCards = function() {
-    // resultの中身を空にすることで、カードも文章もすべて消去されます
+    console.log("リセット処理開始");
+
+    // 1. 画面表示のクリア
     const resultArea = document.getElementById('result');
     if (resultArea) {
-        resultArea.innerHTML = ''; 
-        console.log("鑑定結果（カードと文章）をリセットしました");
-    } else {
-        alert("リセット対象のエリアが見つかりません。");
+        resultArea.innerHTML = '';
     }
+    
+    // 2. データの完全リセット（重要：ここが抜けていた！）
+    window.drawnCards = [];
+    window.remainingDeck = [];
+    
+    // 3. 鑑定結果エリアのクリア
+    const aiArea = document.getElementById('ai-message-area');
+    if (aiArea) aiArea.innerHTML = '';
+
+    console.log("リセット完了。現在の枚数:", window.drawnCards.length);
+    alert("鑑定結果（カードと文章）をリセットしました");
 };
 
 // 4. モーダルを閉じる関数（重複を解消して一つにまとめました）
