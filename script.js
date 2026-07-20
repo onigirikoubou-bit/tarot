@@ -108,64 +108,7 @@ window.showHistoryDetail = function(index) {
     const cardArea = document.createElement('div');
     cardArea.style.textAlign = 'center';
     
-    item.cards.forEach(card => {
-        const cardElement = document.createElement('div');
-        const imagePath = window.getCardImagePath(card);
-        
-        // カード全体のスタイル（#resultで使っている .card-item と同じ見た目にする）
-        cardElement.className = 'card-item';
-        cardElement.style.cssText = `
-            width: 200px !important; min-width: 200px !important;
-            min-height: 300px !important; border: 2px solid ${card.isReversed ? '#ff69b4' : '#333'} !important;
-            border-radius: 15px !important; padding: 15px !important;
-            background-color: #fff !important; color: #333 !important;
-            display: inline-block !important; vertical-align: top !important;
-            margin: 10px !important; box-sizing: border-box !important;
-            text-align: center !important; cursor: pointer !important;
-        `;
-        
-        const isReversed = card.isReversed;
-        const displayName = isReversed ? `${card.name} (逆)` : card.name;
-        const meaning = isReversed ? card.reversed_meaning : card.upright_meaning;
-        const rotationStyle = isReversed ? 'transform: rotate(180deg);' : '';
-
-        // 初期状態のテキスト表示
-        cardElement.innerHTML = `
-            <div class="card-category">${card.category}</div>
-            <hr style="border:0; border-top:1px solid ${isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
-            <div class="name-container">
-                <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
-                    <span style="display:inline-block; ${rotationStyle}">${displayName}</span>
-                </h4>
-            </div>
-            <div class="card-advice" style="font-size:0.85rem; color:#444; margin-top:10px;">${meaning}</div>
-        `;
-        
-        // ★ここを追加：クリックしたら「画像」に切り替わる（もう一度押したら文字に戻るトグル式）
-        let isImageShown = false;
-        cardElement.addEventListener('click', function() {
-            if (!isImageShown) {
-                // 画像に切り替え
-                cardElement.innerHTML = `<img src="${imagePath}" style="width:100%; height:100%; border-radius:10px; object-fit:cover; min-height:270px;">`;
-                isImageShown = true;
-            } else {
-                // 元のテキスト・意味に戻す
-                cardElement.innerHTML = `
-                    <div class="card-category">${card.category}</div>
-                    <hr style="border:0; border-top:1px solid ${isReversed ? '#ff69b4' : '#333'}; margin:8px 0;">
-                    <div class="name-container">
-                        <h4 style="margin:5px 0; color:#333; font-size:1.1rem; min-height:3em;">
-                            <span style="display:inline-block; ${rotationStyle}">${displayName}</span>
-                        </h4>
-                    </div>
-                    <div class="card-advice" style="font-size:0.85rem; color:#444; margin-top:10px;">${meaning}</div>
-                `;
-                isImageShown = false;
-            }
-        });
-        
-        cardArea.appendChild(cardElement);
-    });
+    item.cards.forEach
     
     modalBody.appendChild(cardArea);
     
