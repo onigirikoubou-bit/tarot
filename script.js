@@ -201,15 +201,23 @@ async function requestAIEvaluation() {
         return;
     }
 
-         // ★ポイント：ここで一度文字色を黒系にして、ハッキリと表示させる
+    // ★追加：HTMLのセレクトボックスから「占い師タイプ」と「カテゴリ」の値を取得する
+    const persona = document.getElementById('persona').value;
+    const category = document.getElementById('category').value;
+
     evaluationDiv.style.color = "#333";
     evaluationDiv.innerText = "鑑定中...AIがカードからのメッセージを読み取っています...";
 
     try {
+        // ★修正：送信するデータ（body）に persona と category を追加する
         const response = await fetch('https://tarot-8qlz.onrender.com/api/tarot-reading', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cards: cardsToEvaluate })
+            body: JSON.stringify({ 
+                cards: cardsToEvaluate,
+                persona: persona,
+                category: category 
+            })
         });
 
         if (!response.ok) throw new Error('サーバーエラー');
@@ -217,14 +225,13 @@ async function requestAIEvaluation() {
         const data = await response.json();
         
         if (data && data.message) {
-            // ★結果を表示する際は innerHTML で装飾可能に
             evaluationDiv.innerHTML = `<h3>鑑定結果</h3><p>${data.message.replace(/\n/g, '<br>')}</p>`;
-
-// ★ ここにスクロール処理を追加する
-evaluationDiv.scrollIntoView({ 
-    behavior: 'smooth', // スムーズにスクロールさせる
-    block: 'start'      // 要素の先頭が画面の上部にくるようにする
-});
+            
+            // スクロール処理
+            evaluationDiv.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start'      
+            });
 
             // 結果を保存する関数
 function saveReadingToHistory(cards, message) {

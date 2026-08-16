@@ -3,7 +3,7 @@ const cors = require('cors');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config();
 
-const app = express(); // ★これが抜けていました
+const app = express();
 
 // CORS設定（フロントエンドからの通信を許可）
 app.use(cors()); 
@@ -32,15 +32,17 @@ app.post('/api/tarot-reading', async (req, res) => {
         return `${index + 1}枚目: ${c.name} (${pos}) - 意味: ${c.isReversed ? c.reversed_meaning : c.upright_meaning}`;
     }).join('\n');
 
-    const prompt = `
-あなたはプロのタロット占い師です。以下のカードの並びから、ユーザーの悩みに対する鑑定結果を書いてください。
-トーンは優しく、しかし心に深く届くような言葉でお願いします。
-鑑定結果はHTMLタグ等は含めず、自然な文章で出力してください。
+    // サーバー側（例）での受け取りイメージ
+const { cards, persona, category } = req.body;
 
----
-${cardInfoText}
----
-`;
+// AIへ送るプロンプトの例
+const prompt = `あなたは「${persona}」タイプのタロット占い師です。
+今回は「${category}」に関する相談について、以下のカードを元に鑑定してください。
+良いカードならば前向きになれるような導きを、そうでないならば注意すべき点を示した上で、どうすれば良い方向性に向かうのかを提示してください。
+恋愛や人間関係、就職・転職についての相談には、そのまま突き進むべきか、一旦立ち止まるべきなのかを根拠を示した上で判断してください。
+...`;
+
+
 
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" }); // ※モデル名は最新に合わせて確認してください
