@@ -21,7 +21,8 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // 鑑定APIエンドポイント
 app.post('/api/tarot-reading', async (req, res) => {
-    const { cards } = req.body;
+    // サーバー側（例）での受け取りイメージ
+const { cards, persona, category } = req.body;
 
     if (!cards || !Array.isArray(cards)) {
         return res.status(400).json({ message: "カードデータが正しく送信されていません。" });
@@ -32,10 +33,7 @@ app.post('/api/tarot-reading', async (req, res) => {
         return `${index + 1}枚目: ${c.name} (${pos}) - 意味: ${c.isReversed ? c.reversed_meaning : c.upright_meaning}`;
     }).join('\n');
 
-    // サーバー側（例）での受け取りイメージ
-const { cards, persona, category } = req.body;
 
-// AIへ送るプロンプトの例
 // 選択されているカテゴリを取得
 const category = document.getElementById('category').value;
 
