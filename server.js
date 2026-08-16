@@ -42,7 +42,7 @@ const category = document.getElementById('category').value;
 // 「恋愛」「人間関係」「就職・転職」などの特定のカテゴリのときだけ追加する指示文を作る
 let categorySpecificInstruction = "";
 if (["恋愛", "人間関係", "就職・転職"].includes(category)) {
-    categorySpecificInstruction = "今回は「" + category + "」に関する相談ですので、迷わず突き進むべきか、一旦立ち止まるべきなのかを、カードの根拠を示した上で必ず判断してください。";
+    categorySpecificInstruction = "今回は「" + category + "」に関する相談ですので、今の気持ちに素直に従うべきか、一旦ご破算にするべきなのかを、カードの根拠を示した上で必ず判断してください。";
 }
 
 // プロンプトの中にこの指示文を埋め込む
