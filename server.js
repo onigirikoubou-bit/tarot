@@ -36,12 +36,25 @@ app.post('/api/tarot-reading', async (req, res) => {
 const { cards, persona, category } = req.body;
 
 // AIへ送るプロンプトの例
+// 選択されているカテゴリを取得
+const category = document.getElementById('category').value;
+
+// 「恋愛」「人間関係」「就職・転職」などの特定のカテゴリのときだけ追加する指示文を作る
+let categorySpecificInstruction = "";
+if (["恋愛", "人間関係", "就職・転職"].includes(category)) {
+    categorySpecificInstruction = "今回は「" + category + "」に関する相談ですので、迷わず突き進むべきか、一旦立ち止まるべきなのかを、カードの根拠を示した上で必ず判断してください。";
+}
+
+// プロンプトの中にこの指示文を埋め込む
 const prompt = `あなたは「${persona}」タイプのタロット占い師です。
 今回は「${category}」に関する相談について、以下のカードを元に鑑定してください。
 良いカードならば前向きになれるような導きを、良くないカードが出たら注意すべき点を示した上で、どうすれば良い方向性に向かうのかを提示してください。
-カテゴリーで恋愛、夫婦間、人間関係、就職・転職が選択されている際には、迷わず突き進むべきか、一旦立ち止まるべきなのかを根拠を示した上で判断してください。
-...`;
+${categorySpecificInstruction}
 
+---
+${cardInfoText}
+---
+`;
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" }); // ※モデル名は最新に合わせて確認してください
         const result = await model.generateContent(prompt);
