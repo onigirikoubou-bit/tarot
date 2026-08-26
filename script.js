@@ -181,6 +181,14 @@ window.showHistoryDetail = function(index) {
     msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
     modalBody.appendChild(msgDiv);
     
+// ★追加：iPhoneを含むスマホ・PC共通で、背景の暗い部分をタップしたら閉じる処理
+    modal.onclick = function(event) {
+        // タップされたのがモーダル本体の背景（余白部分）である場合のみ閉じる
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
     modal.style.display = 'block';
 };
 
