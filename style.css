@@ -250,6 +250,7 @@ button {
     top: 10px;
     right: 20px;
     font-size: 28px;
+    padding: 20px 25px;      /* ★ここがポイント：上下左右に大きな余白を持たせる */
     font-weight: bold;
     cursor: pointer;
 }

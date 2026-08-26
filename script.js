@@ -180,21 +180,6 @@ window.showHistoryDetail = function(index) {
     msgDiv.style.marginTop = "20px";
     msgDiv.innerHTML = item.message ? item.message.replace(/\n/g, '<br>') : '';
     modalBody.appendChild(msgDiv);
-    
-// ★追加：iPhoneを含むスマホ・PC共通で、背景の暗い部分をタップしたら閉じる処理
-    modal.onclick = function(event) {
-        // タップされたのがモーダル本体の背景（余白部分）である場合のみ閉じる
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-
-    // ★重要：モーダルの中身（白い部分）をクリックしたときは、イベントが背景に伝わらないようにする
-    if (modalBody) {
-        modalBody.onclick = function(event) {
-            event.stopPropagation();
-        };
-    }
 
     modal.style.display = 'block';
 };
