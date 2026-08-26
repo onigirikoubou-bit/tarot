@@ -189,6 +189,13 @@ window.showHistoryDetail = function(index) {
         }
     };
 
+    // ★重要：モーダルの中身（白い部分）をクリックしたときは、イベントが背景に伝わらないようにする
+    if (modalBody) {
+        modalBody.onclick = function(event) {
+            event.stopPropagation();
+        };
+    }
+
     modal.style.display = 'block';
 };
 
